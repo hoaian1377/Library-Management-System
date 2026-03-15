@@ -1,0 +1,67 @@
+<!-- Modal Đăng nhập -->
+<div id="login-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Đăng nhập</h2>
+        </div>
+        <div class="modal-body">
+            <form action="#" method="POST">
+                <div class="input-group">
+                    <label for="email" class="input-label">Email</label>
+                    <input type="email" id="email" value="admin@gmail.com" required>
+                </div>
+                <div class="input-group">
+                    <label for="password" class="input-label">Mật khẩu</label>
+                    <input type="password" id="password" value="........" required>
+                </div>
+                <div class="remember-group">
+                    <input type="checkbox" id="remember">
+                    <label for="remember">Ghi nhớ đăng nhập</label>
+                </div>
+                <div class="action-group">
+                    <button type="submit" class="btn-login">Đăng nhập</button>
+                    <a href="#" class="forgot-password" id="show-forgot-password">Quên mật khẩu?</a>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            Chưa có tài khoản? <a href="#" id="switch-to-register">Đăng ký ngay</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    const loginModal = document.getElementById('login-modal');
+    const showLoginBtn = document.getElementById('show-login-btn');
+    const switchToRegisterBtn = document.getElementById('switch-to-register');
+    const showForgotPasswordBtn = document.getElementById('show-forgot-password');
+
+    showLoginBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        loginModal.style.display = 'flex';
+    });
+
+    if (switchToRegisterBtn) {
+        switchToRegisterBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            loginModal.style.display = 'none';
+            const registerM = document.getElementById('register-modal');
+            if (registerM) registerM.style.display = 'flex';
+        });
+    }
+
+    if (showForgotPasswordBtn) {
+        showForgotPasswordBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            loginModal.style.display = 'none';
+            const forgotM = document.getElementById('forgot-password-modal');
+            if (forgotM) forgotM.style.display = 'flex';
+        });
+    }
+
+    window.addEventListener('click', function (e) {
+        if (e.target == loginModal) {
+            loginModal.style.display = 'none';
+        }
+    });
+</script>

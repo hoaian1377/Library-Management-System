@@ -51,6 +51,17 @@ border-radius:8px;
 min-width:180px;
 }
 
+/* Tạo khoảng trống ảo để giữ trạng thái hover khi di chuột từ menu xuống submenu */
+.submenu::before {
+content: "";
+position: absolute;
+top: -20px;
+left: 0;
+width: 100%;
+height: 20px;
+background: transparent;
+}
+
 .submenu a{
 color:black;
 display:block;

@@ -1,0 +1,104 @@
+<!-- Modal Đăng ký -->
+<div id="register-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Đăng ký</h2>
+        </div>
+        <div class="modal-body">
+            <form action="#" method="POST">
+                <div class="input-group">
+                    <label for="reg-fullname" class="input-label">Họ và tên</label>
+                    <input type="text" id="reg-fullname" placeholder="Nhập họ và tên" required>
+                </div>
+                <div class="input-group">
+                    <label for="reg-username" class="input-label">Tên đăng nhập</label>
+                    <input type="text" id="reg-username" placeholder="Nhập tên đăng nhập" required>
+                </div>
+                <div class="input-group">
+                    <label for="reg-address" class="input-label">Địa chỉ</label>
+                    <input type="text" id="reg-address" placeholder="Nhập địa chỉ" required>
+                </div>
+                <div class="input-group">
+                    <label for="reg-email" class="input-label">Email</label>
+                    <input type="email" id="reg-email" placeholder="Nhập email" required>
+                </div>
+                <div class="input-group">
+                    <label for="reg-password" class="input-label">Mật khẩu</label>
+                    <input type="password" id="reg-password" placeholder="Nhập mật khẩu" required>
+                </div>
+                <div class="input-group">
+                    <label for="reg-confirm-password" class="input-label">Xác nhận MK</label>
+                    <input type="password" id="reg-confirm-password" placeholder="Xác nhận mật khẩu" required>
+                </div>
+
+                <div class="action-group" style="justify-content: center; margin-left: 0;">
+                    <button type="submit" class="btn-login" style="width: 100%;">Đăng ký</button>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            Đã có tài khoản? <a href="#" id="switch-to-login">Đăng nhập ngay</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    const registerModal = document.getElementById('register-modal');
+    const showRegisterBtns = document.querySelectorAll('#show-register-btn, .modal-footer a[href="#"]'); // Nút đăng ký ở menu và link "Đăng ký ngay" ở modal login
+    const switchToLoginBtn = document.getElementById('switch-to-login');
+
+    // Mở modal đăng ký
+    showRegisterBtns.forEach(btn => {
+        if(btn.innerText.includes('Đăng ký')) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                // Đóng modal login nếu đang mở
+                const loginM = document.getElementById('login-modal');
+                if(loginM) loginM.style.display = 'none';
+                
+                registerModal.style.display = 'flex';
+            });
+        }
+    });
+
+    // Chuyển từ Đăng ký sang Đăng nhập
+    if (switchToLoginBtn) {
+        switchToLoginBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            registerModal.style.display = 'none';
+            const loginM = document.getElementById('login-modal');
+            if(loginM) loginM.style.display = 'flex';
+        });
+    }
+
+    // Xử lý sự kiện khi submit form Đăng ký
+    const registerForm = registerModal.querySelector('form');
+    if(registerForm) {
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const pass = document.getElementById('reg-password').value;
+            const confirmPass = document.getElementById('reg-confirm-password').value;
+            
+            if(pass !== confirmPass) {
+                alert('Mật khẩu xác nhận không khớp. Vui lòng nhập lại!');
+                return;
+            }
+
+            // Xử lý đăng ký thành công
+            alert('Đăng ký tài khoản thành công! Vui lòng đăng nhập.');
+            registerForm.reset();
+            registerModal.style.display = 'none';
+            
+            const loginM = document.getElementById('login-modal');
+            if(loginM) loginM.style.display = 'flex';
+        });
+    }
+
+    // Đóng khi click ra ngoài
+    window.addEventListener('click', function(e) {
+        if (e.target == registerModal) {
+            registerModal.style.display = 'none';
+        }
+    });
+</script>
