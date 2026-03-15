@@ -1,28 +1,107 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<meta charset="UTF-8">
+<title>Library Management</title>
+
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-<div class="container">
-<a class="navbar-brand" href="#">Library</a>
+<header>
+<nav class="navbar">
+
+<div class="logo">
+<a href="#"></a>Library</a>
 </div>
+<ul class="menu">
+
+<li><a href="#">Trang chủ</a></li>
+
+<li class="dropdown">
+<a href="#">Quản lý sách</a>
+
+<ul class="submenu">
+<li><a href="#">Tìm sách</a></li>
+<li><a href="#">Thêm sách</a></li>
+<li><a href="#">Cập nhật sách</a></li>
+<li><a href="#">Xóa sách</a></li>
+<li><a href="#">Ghi chú thông tin sách</a></li>
+</ul>
+
+</li>
+
+<li class="dropdown">
+<a href="#">Mượn sách</a>
+
+<ul class="submenu">
+<li><a href="#">Cho mượn sách</a></li>
+<li><a href="#">Quản lý người mượn</a></li>
+</ul>
+
+</li>
+
+<li class="dropdown">
+<a href="#">Thống kê báo cáo</a>
+
+<ul class="submenu">
+<li><a href="#">Thống kê sách</a></li>
+<li><a href="#">Sách đang mượn</a></li>
+<li><a href="#">Sách quá hạn</a></li>
+</ul>
+
+</li>
+
+<li class="dropdown">
+<a href="#">Đăng nhập</a>
+
+<ul class="submenu">
+<li><a href="#">Đăng nhập</a></li>
+<li><a href="#">Đăng ký</a></li>
+</ul>
+
+</li>
+
+</ul>
+
 </nav>
+</header>
 
-<div class="container mt-5">
 
-<div class="text-center">
-<h1>Library Management System</h1>
-<p>Quản lý sách và sinh viên</p>
+<section class="hero">
 
-<a class="btn btn-primary">Xem sách</a>
-<a class="btn btn-outline-secondary">Đăng nhập</a>
+<div class="hero-text">
+
+<h2>Best Library</h2>
+
+<h1>Quản lý thư viện<br>thông minh</h1>
+
+<p>
+Hệ thống giúp tìm kiếm, quản lý và mượn sách dễ dàng.
+</p>
+
+<div class="buttons">
+
+<button class="btn btn-search">Tìm sách</button>
+
+<button class="btn btn-contact">Liên hệ</button>
+
 </div>
 
 </div>
+
+
+<div class="hero-image">
+
+
+
+</div>
+
+</section>
 
 </body>
 </html>
