@@ -44,43 +44,41 @@
 
 <script>
     const registerModal = document.getElementById('register-modal');
-    const showRegisterBtns = document.querySelectorAll('#show-register-btn, .modal-footer a[href="#"]'); // Nút đăng ký ở menu và link "Đăng ký ngay" ở modal login
+    const showRegisterBtn = document.getElementById('show-register-btn'); // Nút đăng ký ở menu
     const switchToLoginBtn = document.getElementById('switch-to-login');
 
     // Mở modal đăng ký
-    showRegisterBtns.forEach(btn => {
-        if(btn.innerText.includes('Đăng ký')) {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                // Đóng modal login nếu đang mở
-                const loginM = document.getElementById('login-modal');
-                if(loginM) loginM.style.display = 'none';
-                
-                registerModal.style.display = 'flex';
-            });
-        }
-    });
+    if (showRegisterBtn) {
+        showRegisterBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            // Đóng modal login nếu đang mở
+            const loginM = document.getElementById('login-modal');
+            if (loginM) loginM.style.display = 'none';
+
+            registerModal.style.display = 'flex';
+        });
+    }
 
     // Chuyển từ Đăng ký sang Đăng nhập
     if (switchToLoginBtn) {
-        switchToLoginBtn.addEventListener('click', function(e) {
+        switchToLoginBtn.addEventListener('click', function (e) {
             e.preventDefault();
             registerModal.style.display = 'none';
             const loginM = document.getElementById('login-modal');
-            if(loginM) loginM.style.display = 'flex';
+            if (loginM) loginM.style.display = 'flex';
         });
     }
 
     // Xử lý sự kiện khi submit form Đăng ký
     const registerForm = registerModal.querySelector('form');
-    if(registerForm) {
-        registerForm.addEventListener('submit', function(e) {
+    if (registerForm) {
+        registerForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            
+
             const pass = document.getElementById('reg-password').value;
             const confirmPass = document.getElementById('reg-confirm-password').value;
-            
-            if(pass !== confirmPass) {
+
+            if (pass !== confirmPass) {
                 alert('Mật khẩu xác nhận không khớp. Vui lòng nhập lại!');
                 return;
             }
@@ -89,14 +87,14 @@
             alert('Đăng ký tài khoản thành công! Vui lòng đăng nhập.');
             registerForm.reset();
             registerModal.style.display = 'none';
-            
+
             const loginM = document.getElementById('login-modal');
-            if(loginM) loginM.style.display = 'flex';
+            if (loginM) loginM.style.display = 'flex';
         });
     }
 
     // Đóng khi click ra ngoài
-    window.addEventListener('click', function(e) {
+    window.addEventListener('click', function (e) {
         if (e.target == registerModal) {
             registerModal.style.display = 'none';
         }

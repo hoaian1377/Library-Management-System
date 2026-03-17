@@ -1,123 +1,125 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
-<meta charset="UTF-8">
-<title>Library Management</title>
+    <meta charset="UTF-8">
+    <title>Library Management</title>
 
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
-<link rel="stylesheet" href="{% static 'css/login_modal.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login_modal.css' %}">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-<header>
-<nav class="navbar">
+    <header>
+        <nav class="navbar">
 
-<div class="logo">
-<a href="{% url 'base' %}">Library</a>
-</div>
-<ul class="menu">
+            <div class="logo">
+                <a href="{% url 'base' %}">Library</a>
+            </div>
+            <ul class="menu">
 
-<li><a href="{% url 'base' %}">Trang chủ</a></li>
+                <li class="dropdown">
+                    <a href="#">sách</a>
 
-<li class="dropdown">
-<a href="#">sách</a>
+                    <ul class="submenu">
+                        <li><a href="{% url 'book' %}">Quản lý sách</a></li>
+                        <li><a href="{% url 'book' %}">Tìm sách</a></li>
+                        <li><a href="{% url 'book' %}">Thêm sách</a></li>
+                        <li><a href="{% url 'book' %}">Cập nhật sách</a></li>
+                        <li><a href="{% url 'book' %}">Xóa sách</a></li>
+                    </ul>
 
-<ul class="submenu">
-<li><a href="{% url 'book' %}">Quản lý sách</a></li>
-<li><a href="{% url 'book' %}">Tìm sách</a></li>
-<li><a href="{% url 'book' %}">Thêm sách</a></li>
-<li><a href="{% url 'book' %}">Cập nhật sách</a></li>
-<li><a href="{% url 'book' %}">Xóa sách</a></li>
-</ul>
+                </li>
 
-</li>
+                <li class="dropdown">
+                    <a href="#">Mượn sách</a>
+                    <ul class="submenu">
+                        <li><a href="{% url 'borrow' %}">Cho mượn sách</a></li>
+                        <li><a href="{% url 'borrow' %}">Trả sách</a></li>
+                        <li><a href="{% url 'borrow' %}">Danh sách mượn</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Người mượn</a>
+                    <ul class="submenu">
+                        <li><a href="{% url 'borrower' %}">Thêm người mượn</a></li>
+                        <li><a href="{% url 'borrower' %}">Quản lý người mượn</a></li>
+                    </ul>
+                </li>
 
-<li class="dropdown">
-<a href="#">Mượn sách</a>
-<ul class="submenu">
-<li><a href="{% url 'borrow' %}">Cho mượn sách</a></li>
-<li><a href="{% url 'borrow' %}">Trả sách</a></li>
-<li><a href="{% url 'borrow' %}">Danh sách mượn sách </a></li>
-</ul>
-</li>
- <li class="dropdown">
-<a href="#">Người mượn</a>
-<ul class="submenu">
-<li><a href="{% url 'borrower' %}">Thêm người mượn</a></li>    
-<li><a href="{% url 'borrower' %}">Quản lý người mượn</a></li>
-</ul>
-</li>
+                <li class="dropdown">
+                    <a href="#">Thống kê báo cáo</a>
+                    <ul class="submenu">
+                        <li><a href="{% url 'report' %}">Thống kê sách</a></li>
+                        <li><a href="{% url 'report' %}">Sách đang mượn</a></li>
+                        <li><a href="{% url 'report' %}">Sách quá hạn</a></li>
+                    </ul>
 
-<li class="dropdown">
-<a href="#">Thống kê báo cáo</a>
-<ul class="submenu">
-<li><a href="{% url 'report' %}">Thống kê sách</a></li>
-<li><a href="{% url 'report' %}">Sách đang mượn</a></li>
-<li><a href="{% url 'report' %}">Sách quá hạn</a></li>
-</ul>
+                </li>
 
-</li>
+                <li class="dropdown">
+                    <a href="#">Tài Khoản</a>
 
-<li class="dropdown">
-<a href="#">Tài Khoản</a>
+                    <ul class="submenu">
+                        <li><a href="#" id="show-login-btn">Đăng nhập</a></li>
+                        <li><a href="#" id="show-register-btn">Đăng ký</a></li>
+                    </ul>
 
-<ul class="submenu">
-<li><a href="#" id="show-login-btn">Đăng nhập</a></li>
-<li><a href="#" id="show-register-btn">Đăng ký</a></li>
-</ul>
+                </li>
 
-</li>
+            </ul>
 
-</ul>
+        </nav>
+    </header>
 
-</nav>
-</header>
+    {% block content %}
 
-{% block content %}
+    <div class="hero">
+        <div class="hero-text">
 
-<div class="hero-text">
+            <h2>Best Library</h2>
 
-<h2>Best Library</h2>
+            <h1>Quản lý thư viện<br>thông minh</h1>
 
-<h1>Quản lý thư viện<br>thông minh</h1>
+            <p>
+                Hệ thống giúp tìm kiếm, quản lý và mượn sách dễ dàng.
+            </p>
 
-<p>
-Hệ thống giúp tìm kiếm, quản lý và mượn sách dễ dàng.
-</p>
+            <div class="buttons">
 
-<div class="buttons">
+                <button class="btn btn-search">Tìm sách</button>
 
-<button class="btn btn-search">Tìm sách</button>
+                <button class="btn btn-contact">Liên hệ</button>
 
-<button class="btn btn-contact">Liên hệ</button>
+            </div>
 
-</div>
-
-</div>
-
-
-<div class="hero-image">
+        </div>
 
 
+        <div class="hero-image">
 
-</div>
+            <!-- <img src="{% static 'images/hero.png' %}" alt="Library Image"> -->
 
-</section>
+        </div>
+    </div>
 
-{% endblock %}
+    <!-- </section> bị thừa đã được bỏ -->
 
-<!-- Include Modal Đăng nhập -->
-{% include 'login_modal.html' %}
+    {% endblock %}
 
-<!-- Include Modal Đăng ký -->
-{% include 'register_modal.html' %}
+    <!-- Include Modal Đăng nhập -->
+    {% include 'login_modal.html' %}
 
-<!-- Include Modal Quên mật khẩu -->
-{% include 'forgot_password_modal.html' %}
+    <!-- Include Modal Đăng ký -->
+    {% include 'register_modal.html' %}
+
+    <!-- Include Modal Quên mật khẩu -->
+    {% include 'forgot_password_modal.html' %}
 
 </body>
+
 </html>
