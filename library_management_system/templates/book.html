@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/book.css' %}">
+
+<section class="book-section">
+
+<div class="book-container">
+
+<h1 class="book-title">Quản lý sách</h1>
+
+<div class="book-toolbar">
+
+<div class="search-box">
+<input type="text" placeholder="Tìm tên sách...">
+<button>Tìm</button>
+</div>
+
+<div class="book-actions">
+<button class="btn-action">Thêm sách</button>
+<button class="btn-action">Cập nhật</button>
+<button class="btn-action">Xóa</button>
+</div>
+
+</div>
+
+<div class="book-table">
+
+<table>
+
+<tr>
+<th>Mã sách</th>
+<th>Tên sách</th>
+<th>Tác giả</th>
+<th>Năm</th>
+<th>Ghi chú</th>
+<th>Hành động</th>
+</tr>
+
+<tr>
+<td>001</td>
+<td>Hay</td>
+<td>Nguyễn ANh</td>
+<td>2024</td>
+<td>Sách mới</td>
+<td>
+<button class="edit-btn">Sửa</button>
+<button class="delete-btn">Xóa</button>
+</td>
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+{% endblock %}

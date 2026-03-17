@@ -1,0 +1,103 @@
+.borrower-section{
+padding:60px 80px;
+display:flex;
+justify-content:center;
+}
+
+.borrower-container{
+background:white;
+padding:40px;
+border-radius:15px;
+width:100%;
+max-width:1100px;
+box-shadow:0 10px 30px rgba(0,0,0,0.3);
+color:#333;
+}
+
+.borrower-title{
+text-align:center;
+margin-bottom:30px;
+font-size:30px;
+color:#5a0f13;
+}
+
+/* TOOLBAR */
+
+.borrower-toolbar{
+display:flex;
+justify-content:space-between;
+flex-wrap:wrap;
+margin-bottom:25px;
+}
+
+.search-box{
+display:flex;
+gap:10px;
+}
+
+.search-box input{
+padding:10px;
+border-radius:20px;
+border:1px solid #ccc;
+}
+
+.search-box button{
+background:#ff9f1c;
+border:none;
+padding:10px 15px;
+border-radius:20px;
+color:white;
+cursor:pointer;
+}
+
+.borrower-actions .btn-action{
+background:linear-gradient(45deg,#ff9f1c,#ffb347);
+border:none;
+padding:10px 20px;
+border-radius:20px;
+color:white;
+cursor:pointer;
+}
+
+/* TABLE */
+
+.borrower-table table{
+width:100%;
+border-collapse:collapse;
+}
+
+.borrower-table th{
+background:#5a0f13;
+color:white;
+padding:12px;
+}
+
+.borrower-table td{
+padding:12px;
+text-align:center;
+border-bottom:1px solid #eee;
+}
+
+.borrower-table tr:hover{
+background:#f5f5f5;
+}
+
+/* BUTTON */
+
+.edit-btn{
+background:#3498db;
+border:none;
+padding:6px 12px;
+color:white;
+border-radius:5px;
+cursor:pointer;
+}
+
+.delete-btn{
+background:#e74c3c;
+border:none;
+padding:6px 12px;
+color:white;
+border-radius:5px;
+cursor:pointer;
+}

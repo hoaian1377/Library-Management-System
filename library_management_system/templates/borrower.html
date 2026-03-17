@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/borrower.css' %}">
+
+<section class="borrower-section">
+
+<div class="borrower-container">
+
+<h1 class="borrower-title">Quản lý người mượn</h1>
+
+<!-- TOOLBAR -->
+
+<div class="borrower-toolbar">
+
+<div class="search-box">
+<input type="text" placeholder="Tìm người mượn...">
+<button>Tìm</button>
+</div>
+
+<div class="borrower-actions">
+<button class="btn-action">Thêm người mượn</button>
+</div>
+
+</div>
+
+<!-- TABLE -->
+
+<div class="borrower-table">
+
+<table>
+
+<tr>
+<th>Mã</th>
+<th>Tên</th>
+<th>Email</th>
+<th>Số điện thoại</th>
+<th>Địa chỉ</th>
+<th>Hành động</th>
+</tr>
+
+<tr>
+<td>SV001</td>
+<td>Nguyễn Văn A</td>
+<td>vana@gmail.com</td>
+<td>0123456789</td>
+<td>Hà Nội</td>
+<td>
+<button class="edit-btn">Sửa</button>
+<button class="delete-btn">Xóa</button>
+</td>
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+{% endblock %}

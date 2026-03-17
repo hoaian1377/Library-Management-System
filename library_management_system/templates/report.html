@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/report.css' %}">
+
+<section class="report-section">
+
+<div class="report-container">
+
+<h1 class="report-title">Thống kê báo cáo</h1>
+
+<!-- CARDS -->
+
+<div class="report-cards">
+
+<div class="card">
+<h3>Tổng số sách</h3>
+<p>120</p>
+</div>
+
+<div class="card">
+<h3>Sách đang mượn</h3>
+<p>35</p>
+</div>
+
+<div class="card">
+<h3>Sách quá hạn</h3>
+<p>5</p>
+</div>
+
+<div class="card">
+<h3>Người mượn</h3>
+<p>80</p>
+</div>
+
+</div>
+
+<!-- TABLE -->
+
+<div class="report-table">
+
+<h2>Danh sách sách quá hạn</h2>
+
+<table>
+
+<tr>
+<th>Mã sách</th>
+<th>Tên sách</th>
+<th>Người mượn</th>
+<th>Ngày mượn</th>
+<th>Ngày phải trả</th>
+</tr>
+
+<tr>
+<td>001</td>
+<td>Django Web</td>
+<td>Nguyễn Văn A</td>
+<td>01-03-2026</td>
+<td>10-03-2026</td>
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+{% endblock %}

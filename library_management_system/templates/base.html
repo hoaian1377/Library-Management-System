@@ -17,48 +17,53 @@
 <nav class="navbar">
 
 <div class="logo">
-<a href="#"></a>Library</a>
+<a href="{% url 'base' %}">Library</a>
 </div>
 <ul class="menu">
 
-<li><a href="#">Trang chủ</a></li>
+<li><a href="{% url 'base' %}">Trang chủ</a></li>
 
 <li class="dropdown">
-<a href="#">Quản lý sách</a>
+<a href="#">sách</a>
 
 <ul class="submenu">
-<li><a href="#">Tìm sách</a></li>
-<li><a href="#">Thêm sách</a></li>
-<li><a href="#">Cập nhật sách</a></li>
-<li><a href="#">Xóa sách</a></li>
-<li><a href="#">Ghi chú thông tin sách</a></li>
+<li><a href="{% url 'book' %}">Quản lý sách</a></li>
+<li><a href="{% url 'book' %}">Tìm sách</a></li>
+<li><a href="{% url 'book' %}">Thêm sách</a></li>
+<li><a href="{% url 'book' %}">Cập nhật sách</a></li>
+<li><a href="{% url 'book' %}">Xóa sách</a></li>
 </ul>
 
 </li>
 
 <li class="dropdown">
 <a href="#">Mượn sách</a>
-
 <ul class="submenu">
-<li><a href="#">Cho mượn sách</a></li>
-<li><a href="#">Quản lý người mượn</a></li>
+<li><a href="{% url 'borrow' %}">Cho mượn sách</a></li>
+<li><a href="{% url 'borrow' %}">Trả sách</a></li>
+<li><a href="{% url 'borrow' %}">Danh sách mượn sách </a></li>
 </ul>
-
+</li>
+ <li class="dropdown">
+<a href="#">Người mượn</a>
+<ul class="submenu">
+<li><a href="{% url 'borrower' %}">Thêm người mượn</a></li>    
+<li><a href="{% url 'borrower' %}">Quản lý người mượn</a></li>
+</ul>
 </li>
 
 <li class="dropdown">
 <a href="#">Thống kê báo cáo</a>
-
 <ul class="submenu">
-<li><a href="#">Thống kê sách</a></li>
-<li><a href="#">Sách đang mượn</a></li>
-<li><a href="#">Sách quá hạn</a></li>
+<li><a href="{% url 'report' %}">Thống kê sách</a></li>
+<li><a href="{% url 'report' %}">Sách đang mượn</a></li>
+<li><a href="{% url 'report' %}">Sách quá hạn</a></li>
 </ul>
 
 </li>
 
 <li class="dropdown">
-<a href="#">Đăng nhập</a>
+<a href="#">Tài Khoản</a>
 
 <ul class="submenu">
 <li><a href="#" id="show-login-btn">Đăng nhập</a></li>
@@ -72,8 +77,7 @@
 </nav>
 </header>
 
-
-<section class="hero">
+{% block content %}
 
 <div class="hero-text">
 
@@ -103,6 +107,8 @@ Hệ thống giúp tìm kiếm, quản lý và mượn sách dễ dàng.
 </div>
 
 </section>
+
+{% endblock %}
 
 <!-- Include Modal Đăng nhập -->
 {% include 'login_modal.html' %}

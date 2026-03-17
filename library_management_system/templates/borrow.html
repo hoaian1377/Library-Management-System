@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/borrow.css' %}">
+
+<section class="borrow-section">
+
+<div class="borrow-container">
+
+<h1 class="borrow-title">Quản lý mượn sách</h1>
+
+<!-- FORM MƯỢN SÁCH -->
+
+<div class="borrow-form">
+
+<input type="text" placeholder="Tên người mượn">
+
+<input type="text" placeholder="Tên sách">
+
+<input type="date">
+
+<input type="date">
+
+<button class="borrow-btn">Cho mượn</button>
+
+</div>
+
+<!-- BẢNG DANH SÁCH MƯỢN -->
+
+<div class="borrow-table">
+
+<table>
+
+<tr>
+<th>Mã</th>
+<th>Người mượn</th>
+<th>Sách</th>
+<th>Ngày mượn</th>
+<th>Ngày trả</th>
+<th>Trạng thái</th>
+<th>Hành động</th>
+</tr>
+
+<tr>
+<td>001</td>
+<td>Nguyễn Văn A</td>
+<td>Django Web</td>
+<td>20-03-2026</td>
+<td>30-03-2026</td>
+<td>Đang mượn</td>
+<td>
+<button class="return-btn">Trả sách</button>
+</td>
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+{% endblock %}
