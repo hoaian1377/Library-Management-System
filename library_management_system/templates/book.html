@@ -1,62 +1,61 @@
-{% extends 'base.html' %}
-{% load static %}
+{% extends 'base.html' %} {% load static %} {% block content %}
 
-{% block content %}
-
-<link rel="stylesheet" href="{% static 'css/book.css' %}">
+<link rel="stylesheet" href="{% static 'css/book.css' %}" />
 
 <section class="book-section">
+  <div class="book-container">
+    <h1 class="book-title">Quản lý sách</h1>
+    <!-- Thanh công cụ -->
+    <div class="book-toolbar">
+      <!-- Ô tìm kiếm -->
+      <div class="search-box">
+        <input type="text" placeholder="Tìm tên sách..." />
+        <button>Tìm</button>
+      </div>
+      <!-- Các nút thao tác -->
+      <div class="book-actions">
+        <button class="btn-action">Thêm sách</button>
+        <button class="btn-action">Cập nhật</button>
+        <button class="btn-action">Xóa</button>
+      </div>
+    </div>
+    <!-- Bảng hiển thị sách -->
+    <div class="book-table">
+      <table>
+        <tr>
+          <th>Mã sách</th>
+          <th>Tên sách</th>
+          <th>Tác giả</th>
+          <th>Năm</th>
+          <th>Ghi chú</th>
+          <th>Hành động</th>
+        </tr>
 
-<div class="book-container">
-
-<h1 class="book-title">Quản lý sách</h1>
-
-<div class="book-toolbar">
-
-<div class="search-box">
-<input type="text" placeholder="Tìm tên sách...">
-<button>Tìm</button>
-</div>
-
-<div class="book-actions">
-<button class="btn-action">Thêm sách</button>
-<button class="btn-action">Cập nhật</button>
-<button class="btn-action">Xóa</button>
-</div>
-
-</div>
-
-<div class="book-table">
-
-<table>
-
-<tr>
-<th>Mã sách</th>
-<th>Tên sách</th>
-<th>Tác giả</th>
-<th>Năm</th>
-<th>Ghi chú</th>
-<th>Hành động</th>
-</tr>
-
-<tr>
-<td>001</td>
-<td>Hay</td>
-<td>Nguyễn ANh</td>
-<td>2024</td>
-<td>Sách mới</td>
-<td>
-<button class="edit-btn">Sửa</button>
-<button class="delete-btn">Xóa</button>
-</td>
-</tr>
-
-</table>
-
-</div>
-
-</div>
-
+        <!-- Duyệt danh sách sách từ Django -->
+        {% for book in books %}
+        <tr>
+          <td>{{ book.ma_sach }}</td>
+          <td>{{ book.ten_sach }}</td>
+          <td>{{ book.tac_gia }}</td>
+          <td>{{ book.nam_xuat_ban }}</td>
+          <td>{{ book.so_luong }}</td>
+          <td>{{ book.get_trang_thai_display }}</td>
+          <!-- Hiển thị trạng thái tiếng Việt -->
+          <!-- Nút hành động -->
+          <td>
+            <button class="edit-btn">Sửa</button>
+            <button class="delete-btn">Xóa</button>
+          </td>
+        </tr>
+        {% empty %}
+        <!-- Nếu không có sách -->
+        <tr>
+          <td colspan="7">Không có dữ liệu sách</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
 </section>
 
 {% endblock %}
