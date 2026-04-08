@@ -24,13 +24,12 @@
 
                 <li class="dropdown">
                     <a href="#">sách</a>
-
                     <ul class="submenu">
-                        <li><a href="{% url 'book' %}">Quản lý sách</a></li>
-                        <li><a href="{% url 'book' %}">Tìm sách</a></li>
-                        <li><a href="{% url 'book' %}">Thêm sách</a></li>
-                        <li><a href="{% url 'book' %}">Cập nhật sách</a></li>
-                        <li><a href="{% url 'book' %}">Xóa sách</a></li>
+                        <li><a href="{% url 'book_list' %}">Quản lý sách</a></li>
+                        <li><a href="#">Tìm sách</a></li>
+                        <li><a href="#">Thêm sách</a></li>
+                        <li><a href="#">Cập nhật sách</a></li>
+                        <li><a href="#">Xóa sách</a></li>
                     </ul>
 
                 </li>
@@ -63,12 +62,15 @@
 
                 <li class="dropdown">
                     <a href="#">Tài Khoản</a>
-
-                    <ul class="submenu">
-                        <li><a href="#" id="show-login-btn">Đăng nhập</a></li>
-                        <li><a href="#" id="show-register-btn">Đăng ký</a></li>
-                    </ul>
-
+                  <ul class="submenu">
+                    {% if request.session.user %}
+                            <li>Chào mừng {{ request.session.user }}</li>
+                            <li><a href="{% url 'logout' %}">Đăng xuất</a></li>
+                        {% else %}
+                            <li><a href="{% url 'login_modal' %}" id="show-login-btn">Đăng nhập</a></li>
+                            <li><a href="#" id="show-register-btn">Đăng ký</a></li>
+                        {% endif %}
+                    </ul> 
                 </li>
 
             </ul>
