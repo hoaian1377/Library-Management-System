@@ -454,6 +454,18 @@ textarea {
     font-weight: 700;
 }
 
+.selectable-row {
+    cursor: pointer;
+}
+
+.selectable-row:hover {
+    background: #f8fdff;
+}
+
+.selectable-row.is-selected {
+    background: #eef9fd;
+}
+
 .tag {
     display: inline-flex;
     align-items: center;
@@ -482,6 +494,24 @@ textarea {
     background: #fee2e2;
     border-color: #fecaca;
     color: #b91c1c;
+}
+
+.table-action-btn {
+    min-height: 32px;
+    padding: 0 12px;
+    border-radius: 8px;
+    border: 1px solid #cfd8e3;
+    background: #ffffff;
+    color: #1298b5;
+    cursor: pointer;
+}
+
+.table-action-btn:hover {
+    background: #f0fbff;
+}
+
+.form-mode-banner {
+    margin-bottom: 16px;
 }
 
 .chart-placeholder {

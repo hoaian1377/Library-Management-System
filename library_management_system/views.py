@@ -372,7 +372,7 @@ def logout_view(request):
 
 @_require_permission('books')
 def book_list(request):
-    books = Sach.objects.select_related('tacgiaid').all().order_by('sachid')
+    books = Sach.objects.select_related('tacgiaid', 'theloaiid').all().order_by('sachid')
 
     keyword = request.GET.get('q', '').strip()
     if keyword:

@@ -16,6 +16,11 @@
                     đã dựng sẵn giao diện để nối backend ở bước tiếp theo.
                 </p>
             </div>
+            {% if request.session.role == 'admin' or request.session.role == 'staff' or request.session.role == 'manager' %}
+            <div class="quick-actions">
+                <button type="button" class="simple-btn primary" id="new-book-button">Thêm sách mới</button>
+            </div>
+            {% endif %}
         </div>
     </article>
 
@@ -58,11 +63,23 @@
                                     <th>Nhà xuất bản</th>
                                     <th>Số lượng</th>
                                     <th>Trạng thái</th>
+                                    {% if request.session.role == 'admin' or request.session.role == 'staff' or request.session.role == 'manager' %}
+                                    <th>Thao tác</th>
+                                    {% endif %}
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for book in books %}
-                                <tr>
+                                <tr
+                                    class="selectable-row"
+                                    data-book-id="{{ book.sachid }}"
+                                    data-book-title="{{ book.tensach }}"
+                                    data-book-author="{{ book.tacgiaid.tentacgia }}"
+                                    data-book-category="{{ book.theloaiid.tentheloai }}"
+                                    data-book-year="{{ book.namxuatban|default:'' }}"
+                                    data-book-quantity="{{ book.soluong|default:'' }}"
+                                    data-book-note=""
+                                >
                                     <td>{{ book.sachid }}</td>
                                     <td>{{ book.tensach }}</td>
                                     <td>{{ book.tacgiaid.tentacgia }}</td>
@@ -78,10 +95,15 @@
                                         <span class="tag red">Hết sách</span>
                                         {% endif %}
                                     </td>
+                                    {% if request.session.role == 'admin' or request.session.role == 'staff' or request.session.role == 'manager' %}
+                                    <td>
+                                        <button type="button" class="table-action-btn select-book-button">Chọn</button>
+                                    </td>
+                                    {% endif %}
                                 </tr>
                                 {% empty %}
                                 <tr>
-                                    <td colspan="7">Chưa có dữ liệu sách phù hợp.</td>
+                                    <td colspan="{% if request.session.role == 'admin' or request.session.role == 'staff' or request.session.role == 'manager' %}8{% else %}7{% endif %}">Chưa có dữ liệu sách phù hợp.</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -97,11 +119,16 @@
                 <div class="section-title-row">
                     <div>
                         <h3 class="section-title">Biểu mẫu sách</h3>
-                        <p class="section-subtitle">Khung FE cho thêm, cập nhật và xoá sách.</p>
+                        <p class="section-subtitle">Bấm vào một dòng trong bảng để nạp dữ liệu xuống form sửa hoặc xoá.</p>
                     </div>
                 </div>
 
+                <div class="status-banner form-mode-banner" id="book-form-mode">
+                    Đang ở chế độ <strong>thêm sách mới</strong>.
+                </div>
+
                 <form class="form-grid" action="#" method="post" onsubmit="return false;">
+                    <input type="hidden" id="selected-book-id">
                     <div class="field-block">
                         <label for="book-code">Mã sách</label>
                         <input class="surface-input" id="book-code" type="text" placeholder="VD: BK001">
@@ -170,4 +197,89 @@
         </div>
     </div>
 </section>
+
+{% if request.session.role == 'admin' or request.session.role == 'staff' or request.session.role == 'manager' %}
+<script>
+    (() => {
+        const rows = document.querySelectorAll('.selectable-row');
+        const selectButtons = document.querySelectorAll('.select-book-button');
+        const modeBanner = document.getElementById('book-form-mode');
+        const newBookButton = document.getElementById('new-book-button');
+
+        const fields = {
+            id: document.getElementById('selected-book-id'),
+            code: document.getElementById('book-code'),
+            title: document.getElementById('book-title'),
+            author: document.getElementById('book-author'),
+            category: document.getElementById('book-category'),
+            year: document.getElementById('book-year'),
+            quantity: document.getElementById('book-quantity'),
+            note: document.getElementById('book-note')
+        };
+
+        function setActiveRow(activeRow) {
+            rows.forEach((row) => row.classList.toggle('is-selected', row === activeRow));
+        }
+
+        function fillFormFromRow(row) {
+            const { dataset } = row;
+            fields.id.value = dataset.bookId || '';
+            fields.code.value = dataset.bookId || '';
+            fields.title.value = dataset.bookTitle || '';
+            fields.author.value = dataset.bookAuthor || '';
+            fields.category.value = dataset.bookCategory || '';
+            fields.year.value = dataset.bookYear || '';
+            fields.quantity.value = dataset.bookQuantity || '';
+            fields.note.value = dataset.bookNote || '';
+
+            if (modeBanner) {
+                modeBanner.innerHTML = `Đang chọn sách <strong>#${dataset.bookId}</strong> để cập nhật hoặc xoá.`;
+            }
+
+            setActiveRow(row);
+            fields.title.focus();
+        }
+
+        function resetForm() {
+            Object.values(fields).forEach((field) => {
+                if (field) {
+                    field.value = '';
+                }
+            });
+
+            if (modeBanner) {
+                modeBanner.innerHTML = 'Đang ở chế độ <strong>thêm sách mới</strong>.';
+            }
+
+            setActiveRow(null);
+            fields.code.focus();
+        }
+
+        rows.forEach((row) => {
+            row.addEventListener('click', (event) => {
+                if (event.target.closest('.select-book-button')) {
+                    return;
+                }
+                fillFormFromRow(row);
+            });
+        });
+
+        selectButtons.forEach((button) => {
+            button.addEventListener('click', (event) => {
+                const row = event.currentTarget.closest('.selectable-row');
+                if (row) {
+                    fillFormFromRow(row);
+                }
+            });
+        });
+
+        if (newBookButton) {
+            newBookButton.addEventListener('click', () => {
+                resetForm();
+                document.getElementById('book-code')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+        }
+    })();
+</script>
+{% endif %}
 {% endblock %}
