@@ -1,20 +1,147 @@
 {% extends 'base.html' %}
 {% block content %}
-<section class="page-card">
-    <div class="page-header">
-        <div>
-            <h2 class="page-title">Mượn sách</h2>
-            <p class="page-text">Màn hình này chưa có dữ liệu backend thật nên đã bỏ toàn bộ thông số và bảng giả.</p>
+<section class="page-grid">
+    <article class="page-card">
+        <div class="page-header">
+            <div>
+                <h2 class="page-title">Mượn sách</h2>
+                <p class="page-text">
+                    FE đã sẵn sàng cho cả sinh viên và bộ phận xử lý. Bạn có thể dùng form này làm khung để nối
+                    nghiệp vụ tạo phiếu mượn, xét duyệt và cập nhật tình trạng trả sách sau.
+                </p>
+            </div>
         </div>
-    </div>
+    </article>
 
-    <div class="notice-card">
-        <div class="empty-block">
-            <h3>Chức năng đang hoàn thiện</h3>
-            <p>
-                Khi hoàn thiện backend mượn trả, khu vực này sẽ hiển thị phiếu mượn, trạng thái trả sách
-                và các thao tác nghiệp vụ thực tế.
-            </p>
+    <div class="two-column">
+        <div class="stack-grid">
+            <article class="page-card">
+                <div class="section-title-row">
+                    <div>
+                        <h3 class="section-title">Phiếu yêu cầu mượn</h3>
+                        <p class="section-subtitle">Biểu mẫu FE cho thao tác cho mượn sách.</p>
+                    </div>
+                </div>
+
+                <form class="form-grid" action="#" method="post" onsubmit="return false;">
+                    <div class="field-block">
+                        <label for="borrow-book-code">Mã sách</label>
+                        <input class="surface-input" id="borrow-book-code" type="text" placeholder="Nhập mã sách">
+                    </div>
+                    <div class="field-block">
+                        <label for="borrow-book-name">Tên sách</label>
+                        <input class="surface-input" id="borrow-book-name" type="text" placeholder="Tên sách cần mượn">
+                    </div>
+                    <div class="field-block">
+                        <label for="borrow-reader-code">Mã người mượn</label>
+                        <input class="surface-input" id="borrow-reader-code" type="text" placeholder="Mã sinh viên hoặc độc giả">
+                    </div>
+                    <div class="field-block">
+                        <label for="borrow-reader-name">Người mượn</label>
+                        <input class="surface-input" id="borrow-reader-name" type="text" placeholder="Họ tên người mượn">
+                    </div>
+                    <div class="field-block">
+                        <label for="borrow-date">Ngày mượn</label>
+                        <input class="surface-input" id="borrow-date" type="date">
+                    </div>
+                    <div class="field-block">
+                        <label for="return-date">Ngày hẹn trả</label>
+                        <input class="surface-input" id="return-date" type="date">
+                    </div>
+                    <div class="field-block">
+                        <label for="borrow-channel">Hình thức nhận sách</label>
+                        <select class="surface-select" id="borrow-channel">
+                            <option>Nhận tại quầy</option>
+                            <option>Giữ sách trước</option>
+                        </select>
+                    </div>
+                    <div class="field-block">
+                        <label for="borrow-status">Trạng thái dự kiến</label>
+                        <select class="surface-select" id="borrow-status">
+                            <option>Chờ xác nhận</option>
+                            <option>Đang mượn</option>
+                            <option>Đã trả</option>
+                        </select>
+                    </div>
+                    <div class="field-block full">
+                        <label for="borrow-note">Ghi chú</label>
+                        <textarea class="surface-textarea" id="borrow-note" placeholder="Ghi chú về tình trạng sách, thời gian nhận hoặc yêu cầu đặc biệt..."></textarea>
+                    </div>
+                    <div class="action-row full">
+                        <button type="button" class="simple-btn primary">Gửi yêu cầu mượn</button>
+                        <button type="button" class="simple-btn">Xác nhận mượn</button>
+                        <button type="button" class="simple-btn gray">Đánh dấu đã trả</button>
+                    </div>
+                </form>
+            </article>
+
+            <article class="page-card">
+                <div class="section-title-row">
+                    <div>
+                        <h3 class="section-title">Danh sách phiếu mượn</h3>
+                        <p class="section-subtitle">Bảng FE để sau này gắn dữ liệu phiếu mượn thật.</p>
+                    </div>
+                </div>
+
+                <div class="toolbar-row">
+                    <input class="control" type="text" placeholder="Tìm theo mã phiếu, mã sách hoặc người mượn">
+                    <select class="surface-select slim">
+                        <option>Tất cả trạng thái</option>
+                        <option>Chờ xác nhận</option>
+                        <option>Đang mượn</option>
+                        <option>Đã trả</option>
+                    </select>
+                </div>
+
+                <div class="table-card">
+                    <div class="table-scroll">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Mã phiếu</th>
+                                    <th>Mã sách</th>
+                                    <th>Người mượn</th>
+                                    <th>Ngày mượn</th>
+                                    <th>Hẹn trả</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="7">Chưa có dữ liệu phiếu mượn từ backend.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <div class="stack-grid">
+            <article class="page-card">
+                <div class="section-title-row">
+                    <div>
+                        <h3 class="section-title">Ghi chú nghiệp vụ</h3>
+                        <p class="section-subtitle">Giữ lại đúng các điểm cần cho luồng mượn sách.</p>
+                    </div>
+                </div>
+
+                <div class="helper-list">
+                    <div class="helper-item">
+                        <strong>Kiểm tra sách</strong>
+                        <span>Chỉ cho mượn khi sách còn bản trong kho.</span>
+                    </div>
+                    <div class="helper-item">
+                        <strong>Ngày trả</strong>
+                        <span>Backend sẽ tính và lưu ngày hẹn trả sau.</span>
+                    </div>
+                    <div class="helper-item">
+                        <strong>Trạng thái</strong>
+                        <span>Luồng chính gồm chờ xác nhận, đang mượn và đã trả.</span>
+                    </div>
+                </div>
+            </article>
         </div>
     </div>
 </section>

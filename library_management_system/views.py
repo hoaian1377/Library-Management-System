@@ -14,12 +14,16 @@ from .models import Nhanvien, Sach, Taikhoan
 
 ROLE_LABELS = {
     'admin': 'Quản trị viên',
-    'user': 'Người dùng',
+    'user': 'Sinh viên',
+    'staff': 'Nhân viên thư viện',
+    'manager': 'Quản lý thư viện',
 }
 
 ROLE_PERMISSIONS = {
     'admin': {'books', 'borrows', 'borrowers', 'reports'},
-    'user': {'books'},
+    'user': {'books', 'borrows'},
+    'staff': {'books', 'borrows', 'borrowers'},
+    'manager': {'books', 'borrows', 'borrowers', 'reports'},
 }
 
 
@@ -48,6 +52,18 @@ def _get_permissions(role):
     return ROLE_PERMISSIONS.get(_normalize_role(role), ROLE_PERMISSIONS['user'])
 
 
+def _hydrate_session_permissions(request):
+    if not request.session.get('user'):
+        return
+
+    role = _normalize_role(request.session.get('role'))
+    permissions = sorted(_get_permissions(role))
+    request.session['role'] = role
+    request.session['role_label'] = _get_role_label(role)
+    request.session['permission_count'] = len(permissions)
+    request.session['permissions'] = permissions
+
+
 def _json_or_redirect(request, ok, message, *, redirect_to='base', modal=None, status=200, extra=None):
     if _is_ajax(request):
         payload = {'ok': ok, 'message': message}
@@ -66,6 +82,7 @@ def _require_session_auth(view_func):
     @wraps(view_func)
     def wrapped(request, *args, **kwargs):
         if request.session.get('user'):
+            _hydrate_session_permissions(request)
             return view_func(request, *args, **kwargs)
 
         messages.info(request, "Vui lòng đăng nhập để sử dụng chức năng này.")
@@ -122,12 +139,14 @@ def _account_matches_password(account, raw_password):
 
 def _store_session_user(request, account, remember_me=False):
     role = _normalize_role(account.vaitro)
+    permissions = sorted(_get_permissions(role))
     request.session.cycle_key()
     request.session['user'] = account.username
     request.session['display_name'] = account.nhanvienid.hoten
     request.session['role'] = role
     request.session['role_label'] = _get_role_label(role)
-    request.session['permission_count'] = len(_get_permissions(role))
+    request.session['permission_count'] = len(permissions)
+    request.session['permissions'] = permissions
     request.session['user_id'] = account.taikhoanid
 
     if remember_me:
@@ -145,6 +164,7 @@ def _get_account_by_email(email):
 
 
 def base(request):
+    _hydrate_session_permissions(request)
     return render(request, 'base.html')
 
 
@@ -352,12 +372,13 @@ def logout_view(request):
 
 @_require_permission('books')
 def book_list(request):
-    books = Sach.objects.select_related('tacgiaid').all()
+    books = Sach.objects.select_related('tacgiaid').all().order_by('sachid')
 
-    keyword = request.GET.get('q')
+    keyword = request.GET.get('q', '').strip()
     if keyword:
         books = books.filter(tensach__icontains=keyword)
 
     return render(request, 'book.html', {
-        'books': books
+        'books': books,
+        'keyword': keyword,
     })

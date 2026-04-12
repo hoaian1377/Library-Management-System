@@ -16,18 +16,37 @@
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-brand">
                 <a href="{% url 'base' %}">THUVIENTCSOFT</a>
+                <span>Quản lý thư viện</span>
             </div>
 
             <nav class="sidebar-nav">
-                <a href="{% url 'base' %}" class="nav-item">Trang chủ</a>
+                <span class="nav-group">Điều hướng</span>
+                <a href="{% url 'base' %}" class="nav-item {% if request.resolver_match.url_name == 'base' %}active{% endif %}">Trang chủ</a>
 
-                {% if request.session.user and request.session.role == 'admin' %}
-                <a href="{% url 'book_list' %}" class="nav-item">Quản lý sách</a>
-                <a href="{% url 'borrow' %}" class="nav-item">Mượn sách</a>
-                <a href="{% url 'borrower' %}" class="nav-item">Người mượn</a>
-                <a href="{% url 'report' %}" class="nav-item">Báo cáo</a>
-                {% elif request.session.user and request.session.role == 'user' %}
-                <a href="{% url 'book_list' %}" class="nav-item">Tra cứu sách</a>
+                {% if request.session.user %}
+                <span class="nav-group">Chức năng</span>
+
+                {% if 'books' in request.session.permissions %}
+                <a href="{% url 'book_list' %}" class="nav-item {% if request.resolver_match.url_name == 'book_list' %}active{% endif %}">
+                    {% if request.session.role == 'admin' or request.session.role == 'staff' or request.session.role == 'manager' %}
+                    Quản lý sách
+                    {% else %}
+                    Tra cứu sách
+                    {% endif %}
+                </a>
+                {% endif %}
+
+                {% if 'borrows' in request.session.permissions %}
+                <a href="{% url 'borrow' %}" class="nav-item {% if request.resolver_match.url_name == 'borrow' %}active{% endif %}">Mượn sách</a>
+                {% endif %}
+
+                {% if 'borrowers' in request.session.permissions %}
+                <a href="{% url 'borrower' %}" class="nav-item {% if request.resolver_match.url_name == 'borrower' %}active{% endif %}">Người mượn</a>
+                {% endif %}
+
+                {% if 'reports' in request.session.permissions %}
+                <a href="{% url 'report' %}" class="nav-item {% if request.resolver_match.url_name == 'report' %}active{% endif %}">Thống kê báo cáo</a>
+                {% endif %}
                 {% endif %}
             </nav>
         </aside>
@@ -35,14 +54,14 @@
         <div class="app-main">
             <header class="topbar">
                 <div class="topbar-left">
-                    <button type="button" class="sidebar-toggle" id="sidebar-toggle">☰</button>
+                    <button type="button" class="sidebar-toggle" id="sidebar-toggle" aria-label="Mở menu">☰</button>
                     <div>
                         <h1 class="topbar-title">Hệ thống quản lý thư viện</h1>
                         <p class="topbar-subtitle">
                             {% if request.session.user %}
-                            {{ request.session.role_label|default:request.session.role|default:"Người dùng" }} · {{ request.session.permission_count|default:"0" }} quyền
+                            {{ request.session.role_label|default:request.session.role|default:"Người dùng" }} · {{ request.session.permission_count|default:"0" }} quyền đang mở
                             {% else %}
-                            Giao diện quản trị đơn giản, tập trung vào dữ liệu thật
+                            Giao diện bám theo đúng chức năng của đề bài
                             {% endif %}
                         </p>
                     </div>
@@ -72,32 +91,48 @@
 
             <main class="content-area">
                 {% block content %}
-                <section class="page-card">
-                    <div class="page-header">
-                        <div>
-                            <h2 class="page-title">Trang chủ</h2>
-                            <p class="page-text">
-                                {% if request.session.user and request.session.role == 'admin' %}
-                                Bạn đang đăng nhập bằng tài khoản quản trị. Có thể truy cập 4 khu vực: sách, mượn sách, người mượn và báo cáo.
-                                {% elif request.session.user and request.session.role == 'user' %}
-                                Bạn đang đăng nhập bằng tài khoản người dùng. Hiện tại chỉ có quyền tra cứu và xem danh mục sách.
-                                {% else %}
-                                Vui lòng đăng nhập để sử dụng chức năng quản lý. Giao diện này đã loại bỏ các thông số giả và chỉ giữ lại nội dung cần thiết.
-                                {% endif %}
-                            </p>
+                <section class="page-grid">
+                    <article class="page-card hero-card">
+                        <div class="page-header">
+                            <div>
+                                <h2 class="page-title">Quản lý thư viện</h2>
+                                <p class="page-text">
+                                    Giao diện hiện tập trung đúng vào quản lý sách, mượn sách, người mượn,
+                                    đăng nhập - đăng ký và thống kê báo cáo.
+                                </p>
+                            </div>
                         </div>
-                    </div>
 
-                    {% if not request.session.user %}
-                    <div class="empty-block">
-                        <h3>Chưa đăng nhập</h3>
-                        <p>Đăng nhập để truy cập đúng chức năng theo vai trò của bạn.</p>
-                        <div class="action-row">
-                            <a href="#" class="topbar-btn primary" data-open-login="true">Đăng nhập</a>
-                            <a href="#" class="topbar-btn" data-open-register="true">Đăng ký</a>
+                        {% if request.session.user %}
+                        <div class="status-banner">
+                            Bạn đang đăng nhập với vai trò <strong>{{ request.session.role_label|default:request.session.role }}</strong>.
                         </div>
-                    </div>
-                    {% endif %}
+
+                        <div class="quick-actions">
+                            {% if 'books' in request.session.permissions %}
+                            <a href="{% url 'book_list' %}" class="simple-btn primary">Vào sách</a>
+                            {% endif %}
+                            {% if 'borrows' in request.session.permissions %}
+                            <a href="{% url 'borrow' %}" class="simple-btn">Vào mượn sách</a>
+                            {% endif %}
+                            {% if 'borrowers' in request.session.permissions %}
+                            <a href="{% url 'borrower' %}" class="simple-btn">Vào người mượn</a>
+                            {% endif %}
+                            {% if 'reports' in request.session.permissions %}
+                            <a href="{% url 'report' %}" class="simple-btn">Vào báo cáo</a>
+                            {% endif %}
+                        </div>
+                        {% else %}
+                        <div class="status-banner">
+                            Đăng nhập để xem giao diện theo vai trò và sử dụng các chức năng của hệ thống.
+                        </div>
+
+                        <div class="quick-actions">
+                            <a href="#" class="simple-btn primary" data-open-login="true">Đăng nhập hệ thống</a>
+                            <a href="#" class="simple-btn" data-open-register="true">Đăng ký tài khoản</a>
+                        </div>
+                        {% endif %}
+                    </article>
                 </section>
                 {% endblock %}
             </main>

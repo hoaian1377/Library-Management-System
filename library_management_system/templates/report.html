@@ -1,21 +1,85 @@
 {% extends 'base.html' %}
 {% block content %}
-<section class="page-card">
-    <div class="page-header">
-        <div>
-            <h2 class="page-title">Báo cáo</h2>
-            <p class="page-text">Các số liệu báo cáo thật chưa được nối backend nên đã loại bỏ toàn bộ thống kê mô phỏng.</p>
+<section class="page-grid">
+    <article class="page-card">
+        <div class="page-header">
+            <div>
+                <h2 class="page-title">Thống kê báo cáo</h2>
+                <p class="page-text">
+                    FE báo cáo hiện chỉ giữ lại bộ lọc và bảng chi tiết báo cáo theo đúng nhu cầu của đề bài.
+                    Phần dữ liệu sẽ được nối từ backend sau.
+                </p>
+            </div>
         </div>
-    </div>
+    </article>
 
-    <div class="notice-card">
-        <div class="empty-block">
-            <h3>Báo cáo đang chờ dữ liệu</h3>
-            <p>
-                Khi backend thống kê hoàn thiện, khu vực này sẽ hiển thị đúng số lượng sách,
-                sách đang mượn, sách quá hạn và các báo cáo vận hành thực tế.
-            </p>
+    <article class="page-card">
+        <div class="section-title-row">
+            <div>
+                <h3 class="section-title">Bộ lọc báo cáo</h3>
+                <p class="section-subtitle">Khung FE để quản lý thư viện chọn kỳ thống kê.</p>
+            </div>
         </div>
-    </div>
+
+        <form class="form-grid" action="#" method="get" onsubmit="return false;">
+            <div class="field-block">
+                <label for="report-type">Loại báo cáo</label>
+                <select class="surface-select" id="report-type">
+                    <option>Tổng quan thư viện</option>
+                    <option>Hiệu suất mượn trả</option>
+                    <option>Sách quá hạn</option>
+                </select>
+            </div>
+            <div class="field-block">
+                <label for="report-range">Khoảng thời gian</label>
+                <select class="surface-select" id="report-range">
+                    <option>Tháng hiện tại</option>
+                    <option>Quý hiện tại</option>
+                    <option>Tự chọn</option>
+                </select>
+            </div>
+            <div class="field-block">
+                <label for="report-start">Từ ngày</label>
+                <input class="surface-input" id="report-start" type="date">
+            </div>
+            <div class="field-block">
+                <label for="report-end">Đến ngày</label>
+                <input class="surface-input" id="report-end" type="date">
+            </div>
+            <div class="action-row full">
+                <button type="button" class="simple-btn primary">Tạo báo cáo</button>
+                <button type="button" class="simple-btn">Xuất Excel</button>
+                <button type="button" class="simple-btn">Xuất PDF</button>
+            </div>
+        </form>
+    </article>
+
+    <article class="page-card">
+        <div class="section-title-row">
+            <div>
+                <h3 class="section-title">Bảng chi tiết báo cáo</h3>
+                <p class="section-subtitle">Khu vực hiển thị dữ liệu thống kê khi backend sẵn sàng.</p>
+            </div>
+        </div>
+
+        <div class="table-card">
+            <div class="table-scroll">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Hạng mục</th>
+                            <th>Giá trị</th>
+                            <th>Diễn giải</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3">Chưa có dữ liệu báo cáo từ backend.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </article>
 </section>
 {% endblock %}

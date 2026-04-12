@@ -1,67 +1,172 @@
 {% extends 'base.html' %}
-{% load static %}
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/book.css' %}">
-
-<section class="page-card">
-    <div class="page-header">
-        <div>
-            <h2 class="page-title">{% if request.session.role == 'admin' %}Quản lý sách{% else %}Tra cứu sách{% endif %}</h2>
-            <p class="page-text">Chỉ hiển thị dữ liệu sách thật từ hệ thống. Không còn thẻ thống kê hay tham số giả.</p>
+<section class="page-grid">
+    <article class="page-card">
+        <div class="page-header">
+            <div>
+                <h2 class="page-title">
+                    {% if request.session.role == 'admin' or request.session.role == 'staff' or request.session.role == 'manager' %}
+                    Quản lý sách
+                    {% else %}
+                    Tra cứu sách
+                    {% endif %}
+                </h2>
+                <p class="page-text">
+                    Màn hình này đã có dữ liệu sách thật để tra cứu. Các biểu mẫu thêm, cập nhật, xoá và ghi chú
+                    đã dựng sẵn giao diện để nối backend ở bước tiếp theo.
+                </p>
+            </div>
         </div>
-    </div>
+    </article>
 
-    <div class="toolbar-row book-toolbar">
-        <form method="GET" class="search-form">
-            <input class="control" type="text" name="q" placeholder="Tìm tên sách..." value="{{ request.GET.q }}">
-            <button type="submit" class="simple-btn primary">Tìm kiếm</button>
-        </form>
+    <div class="two-column">
+        <div class="stack-grid">
+            <article class="page-card">
+                <div class="section-title-row">
+                    <div>
+                        <h3 class="section-title">Tìm sách</h3>
+                        <p class="section-subtitle">Ô tìm kiếm này đã hoạt động với dữ liệu thật.</p>
+                    </div>
+                </div>
 
-        {% if request.session.role == 'admin' %}
-        <div class="action-row">
-            <button type="button" class="simple-btn">Thêm sách</button>
+                <form method="GET" class="search-form">
+                    <input class="control" type="text" name="q" placeholder="Nhập tên sách..." value="{{ keyword }}">
+                    <button type="submit" class="simple-btn primary">Tìm kiếm</button>
+                    {% if keyword %}
+                    <a href="{% url 'book_list' %}" class="simple-btn gray">Xoá bộ lọc</a>
+                    {% endif %}
+                </form>
+            </article>
+
+            <article class="page-card">
+                <div class="section-title-row">
+                    <div>
+                        <h3 class="section-title">Danh sách sách</h3>
+                        <p class="section-subtitle">Bảng này đang lấy dữ liệu từ hệ thống sách hiện có.</p>
+                    </div>
+                </div>
+
+                <div class="table-card">
+                    <div class="table-scroll">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Mã sách</th>
+                                    <th>Tên sách</th>
+                                    <th>Tác giả</th>
+                                    <th>Năm XB</th>
+                                    <th>Nhà xuất bản</th>
+                                    <th>Số lượng</th>
+                                    <th>Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for book in books %}
+                                <tr>
+                                    <td>{{ book.sachid }}</td>
+                                    <td>{{ book.tensach }}</td>
+                                    <td>{{ book.tacgiaid.tentacgia }}</td>
+                                    <td>{{ book.namxuatban|default:"-" }}</td>
+                                    <td>{{ book.nhaxuatban|default:"-" }}</td>
+                                    <td>{{ book.soluong }}</td>
+                                    <td>
+                                        {% if book.soluong > 5 %}
+                                        <span class="tag green">Sẵn sàng</span>
+                                        {% elif book.soluong > 0 %}
+                                        <span class="tag orange">Sắp hết</span>
+                                        {% else %}
+                                        <span class="tag red">Hết sách</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="7">Chưa có dữ liệu sách phù hợp.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </article>
         </div>
-        {% endif %}
-    </div>
 
-    <div class="table-card">
-        <div class="table-scroll">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Mã sách</th>
-                        <th>Tên sách</th>
-                        <th>Tác giả</th>
-                        <th>Năm XB</th>
-                        <th>Nhà xuất bản</th>
-                        <th>Số lượng</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for book in books %}
-                    <tr>
-                        <td>{{ book.sachid }}</td>
-                        <td>{{ book.tensach }}</td>
-                        <td>{{ book.tacgiaid.tentacgia }}</td>
-                        <td>{{ book.namxuatban|default:"-" }}</td>
-                        <td>{{ book.nhaxuatban|default:"-" }}</td>
-                        <td>
-                            {% if book.soluong > 5 %}
-                            <span class="tag green">{{ book.soluong }} bản</span>
-                            {% elif book.soluong > 0 %}
-                            <span class="tag orange">{{ book.soluong }} bản</span>
-                            {% else %}
-                            <span class="tag red">Hết sách</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="6">Chưa có dữ liệu sách.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <div class="stack-grid">
+            {% if request.session.role == 'admin' or request.session.role == 'staff' or request.session.role == 'manager' %}
+            <article class="page-card">
+                <div class="section-title-row">
+                    <div>
+                        <h3 class="section-title">Biểu mẫu sách</h3>
+                        <p class="section-subtitle">Khung FE cho thêm, cập nhật và xoá sách.</p>
+                    </div>
+                </div>
+
+                <form class="form-grid" action="#" method="post" onsubmit="return false;">
+                    <div class="field-block">
+                        <label for="book-code">Mã sách</label>
+                        <input class="surface-input" id="book-code" type="text" placeholder="VD: BK001">
+                    </div>
+                    <div class="field-block">
+                        <label for="book-title">Tên sách</label>
+                        <input class="surface-input" id="book-title" type="text" placeholder="Nhập tên sách">
+                    </div>
+                    <div class="field-block">
+                        <label for="book-author">Tác giả</label>
+                        <input class="surface-input" id="book-author" type="text" placeholder="Nhập tác giả">
+                    </div>
+                    <div class="field-block">
+                        <label for="book-category">Thể loại</label>
+                        <input class="surface-input" id="book-category" type="text" placeholder="Nhập thể loại">
+                    </div>
+                    <div class="field-block">
+                        <label for="book-year">Năm xuất bản</label>
+                        <input class="surface-input" id="book-year" type="number" placeholder="2026">
+                    </div>
+                    <div class="field-block">
+                        <label for="book-quantity">Số lượng</label>
+                        <input class="surface-input" id="book-quantity" type="number" placeholder="0">
+                    </div>
+                    <div class="field-block full">
+                        <label for="book-note">Ghi chú thông tin sách</label>
+                        <textarea class="surface-textarea" id="book-note" placeholder="Ghi chú tình trạng, vị trí kệ hoặc mô tả ngắn..."></textarea>
+                    </div>
+                    <div class="action-row full">
+                        <button type="button" class="simple-btn primary">Thêm sách</button>
+                        <button type="button" class="simple-btn">Cập nhật sách</button>
+                        <button type="button" class="simple-btn danger-outline">Xoá sách</button>
+                    </div>
+                </form>
+            </article>
+            {% else %}
+            <article class="page-card">
+                <div class="section-title-row">
+                    <div>
+                        <h3 class="section-title">Mượn sách nhanh</h3>
+                        <p class="section-subtitle">Sinh viên có thể chuyển sang màn mượn sách để gửi yêu cầu.</p>
+                    </div>
+                </div>
+
+                <div class="helper-list">
+                    <div class="helper-item">
+                        <strong>Bước 1</strong>
+                        <span>Tìm sách phù hợp trong bảng danh mục bên trái.</span>
+                    </div>
+                    <div class="helper-item">
+                        <strong>Bước 2</strong>
+                        <span>Kiểm tra trạng thái còn bản hay đã hết sách.</span>
+                    </div>
+                    <div class="helper-item">
+                        <strong>Bước 3</strong>
+                        <span>Chuyển sang màn mượn sách để tạo yêu cầu mượn.</span>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+                    <a href="{% url 'borrow' %}" class="simple-btn primary">Đi đến mượn sách</a>
+                </div>
+            </article>
+            {% endif %}
+
         </div>
     </div>
 </section>

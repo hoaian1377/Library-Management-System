@@ -1,20 +1,133 @@
 {% extends 'base.html' %}
 {% block content %}
-<section class="page-card">
-    <div class="page-header">
-        <div>
-            <h2 class="page-title">Người mượn</h2>
-            <p class="page-text">Hiện chưa có dữ liệu người mượn thật từ backend, nên giao diện chỉ giữ phần thông báo cần thiết.</p>
+<section class="page-grid">
+    <article class="page-card">
+        <div class="page-header">
+            <div>
+                <h2 class="page-title">Quản lý người mượn sách</h2>
+                <p class="page-text">
+                    Màn hình này dành cho quản lý người mượn, hồ sơ độc giả và theo dõi lịch sử liên quan.
+                    Toàn bộ là FE hoàn chỉnh, chờ backend đưa dữ liệu và thao tác thật vào.
+                </p>
+            </div>
         </div>
-    </div>
+    </article>
 
-    <div class="notice-card">
-        <div class="empty-block">
-            <h3>Chưa có dữ liệu thật</h3>
-            <p>
-                Sau khi hoàn thiện backend người mượn, màn hình này sẽ hiển thị danh sách độc giả,
-                thông tin liên hệ và các thao tác quản lý tương ứng.
-            </p>
+    <div class="two-column">
+        <div class="stack-grid">
+            <article class="page-card">
+                <div class="section-title-row">
+                    <div>
+                        <h3 class="section-title">Thông tin người mượn</h3>
+                        <p class="section-subtitle">Biểu mẫu FE cho thêm mới hoặc cập nhật hồ sơ độc giả.</p>
+                    </div>
+                </div>
+
+                <form class="form-grid" action="#" method="post" onsubmit="return false;">
+                    <div class="field-block">
+                        <label for="borrower-code">Mã người mượn</label>
+                        <input class="surface-input" id="borrower-code" type="text" placeholder="VD: SV001">
+                    </div>
+                    <div class="field-block">
+                        <label for="borrower-name">Họ và tên</label>
+                        <input class="surface-input" id="borrower-name" type="text" placeholder="Nhập họ tên">
+                    </div>
+                    <div class="field-block">
+                        <label for="borrower-email">Email</label>
+                        <input class="surface-input" id="borrower-email" type="email" placeholder="email@truong.edu.vn">
+                    </div>
+                    <div class="field-block">
+                        <label for="borrower-phone">Số điện thoại</label>
+                        <input class="surface-input" id="borrower-phone" type="text" placeholder="Nhập số điện thoại">
+                    </div>
+                    <div class="field-block">
+                        <label for="borrower-class">Lớp / Khoa</label>
+                        <input class="surface-input" id="borrower-class" type="text" placeholder="VD: CNTT K23">
+                    </div>
+                    <div class="field-block">
+                        <label for="borrower-status">Trạng thái</label>
+                        <select class="surface-select" id="borrower-status">
+                            <option>Đang hoạt động</option>
+                            <option>Tạm khóa</option>
+                        </select>
+                    </div>
+                    <div class="field-block full">
+                        <label for="borrower-note">Ghi chú hồ sơ</label>
+                        <textarea class="surface-textarea" id="borrower-note" placeholder="Ghi chú liên hệ, lịch sử vi phạm hoặc lưu ý đặc biệt..."></textarea>
+                    </div>
+                    <div class="action-row full">
+                        <button type="button" class="simple-btn primary">Thêm người mượn</button>
+                        <button type="button" class="simple-btn">Cập nhật hồ sơ</button>
+                        <button type="button" class="simple-btn danger-outline">Xoá hồ sơ</button>
+                    </div>
+                </form>
+            </article>
+
+            <article class="page-card">
+                <div class="section-title-row">
+                    <div>
+                        <h3 class="section-title">Danh sách người mượn</h3>
+                        <p class="section-subtitle">Bảng FE chờ backend cung cấp dữ liệu độc giả thật.</p>
+                    </div>
+                </div>
+
+                <div class="toolbar-row">
+                    <input class="control" type="text" placeholder="Tìm theo mã, tên, email hoặc lớp">
+                    <select class="surface-select slim">
+                        <option>Tất cả trạng thái</option>
+                        <option>Đang hoạt động</option>
+                        <option>Tạm khóa</option>
+                    </select>
+                </div>
+
+                <div class="table-card">
+                    <div class="table-scroll">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Mã</th>
+                                    <th>Họ tên</th>
+                                    <th>Email</th>
+                                    <th>Điện thoại</th>
+                                    <th>Lớp / Khoa</th>
+                                    <th>Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="6">Chưa có dữ liệu người mượn từ backend.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <div class="stack-grid">
+            <article class="page-card">
+                <div class="section-title-row">
+                    <div>
+                        <h3 class="section-title">Ghi chú người mượn</h3>
+                        <p class="section-subtitle">Thông tin cần giữ để phục vụ quản lý người mượn.</p>
+                    </div>
+                </div>
+
+                <div class="helper-list">
+                    <div class="helper-item">
+                        <strong>Xác minh liên hệ</strong>
+                        <span>Kiểm tra email và số điện thoại trước khi xử lý hồ sơ.</span>
+                    </div>
+                    <div class="helper-item">
+                        <strong>Ghi chú hồ sơ</strong>
+                        <span>Lưu các lưu ý liên quan đến lịch sử mượn hoặc nhắc nhở.</span>
+                    </div>
+                    <div class="helper-item">
+                        <strong>Trạng thái hoạt động</strong>
+                        <span>Phân biệt hồ sơ đang hoạt động và hồ sơ bị tạm khóa.</span>
+                    </div>
+                </div>
+            </article>
         </div>
     </div>
 </section>
