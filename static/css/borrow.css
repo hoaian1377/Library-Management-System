@@ -1,89 +1,21 @@
-.borrow-section{
-padding:60px 80px;
-display:flex;
-justify-content:center;
+.borrow-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
 }
 
-.borrow-container{
-background:white;
-padding:40px;
-border-radius:15px;
-width:100%;
-max-width:1100px;
-box-shadow:0 10px 30px rgba(0,0,0,0.3);
-color:#333;
+.borrow-actions-full {
+    grid-column: 1 / -1;
+    margin-top: 8px;
 }
 
-.borrow-title{
-text-align:center;
-margin-bottom:30px;
-font-size:30px;
-color:#5a0f13;
+.action-fit {
+    min-height: 40px;
+    padding: 0 14px;
 }
 
-/* FORM */
-
-.borrow-form{
-display:flex;
-gap:15px;
-flex-wrap:wrap;
-margin-bottom:30px;
-justify-content:center;
-}
-
-.borrow-form input{
-padding:10px;
-border-radius:20px;
-border:1px solid #ccc;
-}
-
-.borrow-btn{
-background:linear-gradient(45deg,#ff9f1c,#ffb347);
-border:none;
-padding:10px 20px;
-border-radius:20px;
-color:white;
-cursor:pointer;
-}
-
-.borrow-btn:hover{
-transform:translateY(-3px);
-}
-
-/* TABLE */
-
-.borrow-table table{
-width:100%;
-border-collapse:collapse;
-}
-
-.borrow-table th{
-background:#5a0f13;
-color:white;
-padding:12px;
-}
-
-.borrow-table td{
-padding:12px;
-text-align:center;
-border-bottom:1px solid #eee;
-}
-
-.borrow-table tr:hover{
-background:#f5f5f5;
-}
-
-/* RETURN BUTTON */
-
-.return-btn{
-background:#2ecc71;
-border:none;
-padding:6px 12px;
-color:white;
-border-radius:5px;
-cursor:pointer;
-}
-
-.return-btn:hover{
-opacity:0.8;
+@media (max-width: 720px) {
+    .borrow-form-grid {
+        grid-template-columns: 1fr;
+    }
 }

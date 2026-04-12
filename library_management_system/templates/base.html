@@ -1,82 +1,90 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
     <meta charset="UTF-8">
-    <title>Library Management</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Atelier</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/login_modal.css' %}">
-
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
-
 <body>
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+    <div class="ambient ambient-grid"></div>
 
-    <header>
+    <header class="site-header">
         <nav class="navbar">
+            <a href="{% url 'base' %}" class="brand">
+                <span class="brand-mark">L</span>
+                <span class="brand-copy">
+                    <span class="brand-name">Library</span>
+                    <span class="brand-tagline">Atelier management suite</span>
+                </span>
+            </a>
 
-            <div class="logo">
-                <a href="{% url 'base' %}">Library</a>
-            </div>
-            <ul class="menu">
-                {% if request.session.user %}
-                <li class="dropdown">
-                    <a href="#">sách</a>
-                    <ul class="submenu">
-                        <li><a href="{% url 'book_list' %}">Quản lý sách</a></li>
-                        <li><a href="#">Tìm sách</a></li>
-                        <li><a href="#">Thêm sách</a></li>
-                        <li><a href="#">Cập nhật sách</a></li>
-                        <li><a href="#">Xóa sách</a></li>
-                    </ul>
- 
-                </li>
+            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
 
-                <li class="dropdown">
-                    <a href="#">Mượn sách</a>
-                    <ul class="submenu">
-                        <li><a href="{% url 'borrow' %}">Cho mượn sách</a></li>
-                        <li><a href="{% url 'borrow' %}">Trả sách</a></li>
-                        <li><a href="{% url 'borrow' %}">Danh sách mượn</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#">Người mượn</a>
-                    <ul class="submenu">
-                        <li><a href="{% url 'borrower' %}">Thêm người mượn</a></li>
-                        <li><a href="{% url 'borrower' %}">Quản lý người mượn</a></li>
-                    </ul>
-                </li>
-
-                <li class="dropdown">
-                    <a href="#">Thống kê báo cáo</a>
-                    <ul class="submenu">
-                        <li><a href="{% url 'report' %}">Thống kê sách</a></li>
-                        <li><a href="{% url 'report' %}">Sách đang mượn</a></li>
-                        <li><a href="{% url 'report' %}">Sách quá hạn</a></li>
-                    </ul>
- 
-                </li>
-                {% endif %}
- 
-                <li class="dropdown">
-                    <a href="#">Tài Khoản</a>
-                  <ul class="submenu">
+            <div class="nav-panel" id="site-menu">
+                <ul class="menu">
                     {% if request.session.user %}
-                            <li>Chào mừng {{ request.session.display_name|default:request.session.user }}</li>
-                            <li>Vai trò: {{ request.session.role|default:"user" }}</li>
-                            <li><a href="{% url 'logout' %}">Đăng xuất</a></li>
-                        {% else %}
-                            <li><a href="{% url 'login_modal' %}" data-open-login="true">Đăng nhập</a></li>
-                            <li><a href="#" data-open-register="true">Đăng ký</a></li>
-                        {% endif %}
-                    </ul> 
-                </li>
- 
-            </ul>
-
+                    <li class="dropdown">
+                        <a href="#" class="menu-link">Sach</a>
+                        <ul class="submenu">
+                            <li><a href="{% url 'book_list' %}">Thu vien sach</a></li>
+                            <li><a href="{% url 'book_list' %}">Kham pha tieu de</a></li>
+                            <li><a href="{% url 'book_list' %}">Kho luu tru</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="menu-link">Muon tra</a>
+                        <ul class="submenu">
+                            <li><a href="{% url 'borrow' %}">Luu thong sach</a></li>
+                            <li><a href="{% url 'borrow' %}">Lich su phieu muon</a></li>
+                            <li><a href="{% url 'borrow' %}">Tra sach nhanh</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="menu-link">Doc gia</a>
+                        <ul class="submenu">
+                            <li><a href="{% url 'borrower' %}">Danh sach doc gia</a></li>
+                            <li><a href="{% url 'borrower' %}">Ho so thanh vien</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="menu-link">Bao cao</a>
+                        <ul class="submenu">
+                            <li><a href="{% url 'report' %}">Tong quan he thong</a></li>
+                            <li><a href="{% url 'report' %}">Sach qua han</a></li>
+                            <li><a href="{% url 'report' %}">Hieu suat van hanh</a></li>
+                        </ul>
+                    </li>
+                    {% endif %}
+                    <li class="dropdown account-dropdown">
+                        <a href="#" class="menu-link account-link">Tai khoan</a>
+                        <ul class="submenu account-menu">
+                            {% if request.session.user %}
+                            <li class="account-summary">
+                                <span class="account-label">Dang nhap boi</span>
+                                <strong>{{ request.session.display_name|default:request.session.user }}</strong>
+                                <span class="account-role">{{ request.session.role|default:"user" }}</span>
+                            </li>
+                            <li><a href="{% url 'logout' %}">Dang xuat</a></li>
+                            {% else %}
+                            <li><a href="#" data-open-login="true">Dang nhap</a></li>
+                            <li><a href="#" data-open-register="true">Dang ky</a></li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                </ul>
+            </div>
         </nav>
     </header>
 
@@ -88,71 +96,148 @@
     </div>
     {% endif %}
 
-    {% block content %}
+    <main class="page-main">
+        {% block content %}
+        <section class="hero">
+            <div class="hero-copy">
+                <span class="eyebrow">Premium editorial dashboard</span>
+                <h1>Quan ly thu vien theo mot phong cach sang trong, ro rang va de mo rong.</h1>
+                <p class="hero-description">
+                    Mot giao dien lay cam hung tu thu vien hien dai: nhieu khoang tho, bo cuc sach se,
+                    mau sac co chieu sau va cac thao tac duoc uu tien cho van hanh hang ngay.
+                </p>
 
-    <div class="hero">
-        <div class="hero-text">
+                <div class="hero-actions">
+                    {% if request.session.user %}
+                    <a href="{% url 'book_list' %}" class="btn btn-primary">Mo kho sach</a>
+                    <a href="{% url 'report' %}" class="btn btn-secondary">Xem dashboard</a>
+                    {% else %}
+                    <a href="#" class="btn btn-primary" data-open-login="true">Dang nhap he thong</a>
+                    <a href="#" class="btn btn-secondary" data-open-register="true">Tao tai khoan</a>
+                    {% endif %}
+                </div>
 
-            <h2>Best Library</h2>
+                <div class="hero-pills">
+                    <span>Responsive desktop va mobile</span>
+                    <span>Ui/Ux uu tien thao tac nhanh</span>
+                    <span>Cam hung tu boutique library</span>
+                </div>
 
-            <h1>Quản lý thư viện<br>thông minh</h1>
-
-            <p>
-                Hệ thống giúp tìm kiếm, quản lý và mượn sách dễ dàng.
-            </p>
-
-            <div class="buttons">
-                {% if request.session.user %}
-                <a href="{% url 'book_list' %}">
-                    <button type="button" class="btn btn-search">Quản lý sách</button>
-                </a>
-                <a href="{% url 'report' %}">
-                    <button type="button" class="btn btn-contact">Báo cáo</button>
-                </a>
-                {% else %}
-                <button type="button" class="btn btn-search" data-open-login="true">Đăng nhập</button>
-                <button type="button" class="btn btn-contact" data-open-register="true">Đăng ký</button>
+                {% if not request.session.user %}
+                <p class="guest-note">
+                    Khu vuc public chi gioi thieu san pham. Dang nhap de mo cac module quan ly sach,
+                    doc gia, muon tra va thong ke.
+                </p>
                 {% endif %}
- 
             </div>
 
-            {% if not request.session.user %}
-            <p class="guest-note">
-                Đăng nhập để sử dụng các chức năng quản lý sách, mượn trả và báo cáo.
-            </p>
-            {% endif %}
- 
-        </div>
+            <div class="hero-visual">
+                <article class="feature-panel hero-panel">
+                    <div class="panel-topline">
+                        <span class="panel-kicker">Library pulse</span>
+                        <span class="panel-chip">Live preview</span>
+                    </div>
+                    <div class="panel-metrics">
+                        <div class="metric-card highlight">
+                            <span class="metric-label">Book curation</span>
+                            <strong>1,240</strong>
+                            <span class="metric-note">tua sach da duoc danh muc</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-label">Luu thong hom nay</span>
+                            <strong>182</strong>
+                            <span class="metric-note">phieu muon va tra duoc xu ly</span>
+                        </div>
+                    </div>
+                    <div class="hero-shelves">
+                        <div class="shelf-card">
+                            <span class="shelf-index">01</span>
+                            <div>
+                                <h3>Reading room</h3>
+                                <p>Khong gian tra cuu va kham pha sach moi.</p>
+                            </div>
+                        </div>
+                        <div class="shelf-card">
+                            <span class="shelf-index">02</span>
+                            <div>
+                                <h3>Member desk</h3>
+                                <p>Theo doi thanh vien, trang thai muon va lich su tuong tac.</p>
+                            </div>
+                        </div>
+                        <div class="shelf-card">
+                            <span class="shelf-index">03</span>
+                            <div>
+                                <h3>Insight board</h3>
+                                <p>Tong hop chi so de nhin ngay muc do van hanh cua thu vien.</p>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
 
+        <section class="feature-grid">
+            <article class="feature-panel">
+                <span class="panel-kicker">Catalog first</span>
+                <h2>Bo cuc uu tien viec doc va tim thay thong tin ngay lap tuc.</h2>
+                <p>
+                    Tu search, bang du lieu den cac thanh phan trang thai deu duoc thiet ke de phuc vu
+                    thao tac quan ly hang ngay thay vi chi de trinh bay.
+                </p>
+            </article>
+            <article class="feature-panel">
+                <span class="panel-kicker">Circulation flow</span>
+                <h2>Muon tra sach duoc dat trong mot quy trinh ro, de kiem soat.</h2>
+                <p>
+                    Form, lich su va canh bao qua han nam trong mot he thong nhat quan, phu hop ca
+                    desktop lan mobile cho nhan vien di chuyen.
+                </p>
+            </article>
+            <article class="feature-panel">
+                <span class="panel-kicker">Quiet luxury</span>
+                <h2>Mot giao dien mang chat thu vien cao cap thay vi dashboard dai tra.</h2>
+                <p>
+                    Tong mau ink navy, parchment va brass giup san pham trong tin cay, khac biet
+                    va co cam giac "xay cho mot don vi that".
+                </p>
+            </article>
+        </section>
+        {% endblock %}
+    </main>
 
-        <div class="hero-image">
-
-            <!-- <img src="{% static 'images/hero.png' %}" alt="Library Image"> -->
-
-        </div>
-    </div>
-
-    <!-- </section> bị thừa đã được bỏ -->
-
-    {% endblock %}
-
-    <!-- Include Modal Đăng nhập -->
     {% include 'login_modal.html' %}
-
-    <!-- Include Modal Đăng ký -->
     {% include 'register_modal.html' %}
-
-    <!-- Include Modal Quên mật khẩu -->
     {% include 'forgot_password_modal.html' %}
 
     <script>
         (() => {
+            const body = document.body;
+            const navToggle = document.querySelector('.nav-toggle');
+            const navPanel = document.getElementById('site-menu');
+
+            if (navToggle && navPanel) {
+                navToggle.addEventListener('click', () => {
+                    const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+                    navToggle.setAttribute('aria-expanded', String(!expanded));
+                    navPanel.classList.toggle('is-open', !expanded);
+                    body.classList.toggle('nav-open', !expanded);
+                });
+
+                navPanel.querySelectorAll('a').forEach((link) => {
+                    link.addEventListener('click', () => {
+                        navToggle.setAttribute('aria-expanded', 'false');
+                        navPanel.classList.remove('is-open');
+                        body.classList.remove('nav-open');
+                    });
+                });
+            }
+
             const params = new URLSearchParams(window.location.search);
             const authModal = params.get('auth');
             const modalByName = {
                 login: 'login-modal',
                 register: 'register-modal',
-                forgot: 'forgot-password-modal',
+                forgot: 'forgot-password-modal'
             };
 
             const modalId = modalByName[authModal];
@@ -170,7 +255,5 @@
             }
         })();
     </script>
-
 </body>
-
 </html>

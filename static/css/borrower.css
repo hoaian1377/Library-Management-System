@@ -1,103 +1,58 @@
-.borrower-section{
-padding:60px 80px;
-display:flex;
-justify-content:center;
+.borrower-toolbar-layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
 }
 
-.borrower-container{
-background:white;
-padding:40px;
-border-radius:15px;
-width:100%;
-max-width:1100px;
-box-shadow:0 10px 30px rgba(0,0,0,0.3);
-color:#333;
+.borrower-toolbar-layout .search-form {
+    flex: 1 1 420px;
 }
 
-.borrower-title{
-text-align:center;
-margin-bottom:30px;
-font-size:30px;
-color:#5a0f13;
+.member-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
 }
 
-/* TOOLBAR */
-
-.borrower-toolbar{
-display:flex;
-justify-content:space-between;
-flex-wrap:wrap;
-margin-bottom:25px;
+.member-card {
+    padding: 24px;
 }
 
-.search-box{
-display:flex;
-gap:10px;
+.member-card h2 {
+    margin: 18px 0 10px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
 }
 
-.search-box input{
-padding:10px;
-border-radius:20px;
-border:1px solid #ccc;
+.member-card p {
+    margin: 0;
+    color: var(--text-muted);
+    line-height: 1.7;
 }
 
-.search-box button{
-background:#ff9f1c;
-border:none;
-padding:10px 15px;
-border-radius:20px;
-color:white;
-cursor:pointer;
+.member-meta {
+    display: grid;
+    gap: 10px;
+    margin-top: 18px;
+    color: #f1ddbf;
+    font-size: 0.92rem;
 }
 
-.borrower-actions .btn-action{
-background:linear-gradient(45deg,#ff9f1c,#ffb347);
-border:none;
-padding:10px 20px;
-border-radius:20px;
-color:white;
-cursor:pointer;
+.action-fit {
+    min-height: 40px;
+    padding: 0 14px;
 }
 
-/* TABLE */
-
-.borrower-table table{
-width:100%;
-border-collapse:collapse;
+@media (max-width: 1080px) {
+    .member-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
-.borrower-table th{
-background:#5a0f13;
-color:white;
-padding:12px;
-}
-
-.borrower-table td{
-padding:12px;
-text-align:center;
-border-bottom:1px solid #eee;
-}
-
-.borrower-table tr:hover{
-background:#f5f5f5;
-}
-
-/* BUTTON */
-
-.edit-btn{
-background:#3498db;
-border:none;
-padding:6px 12px;
-color:white;
-border-radius:5px;
-cursor:pointer;
-}
-
-.delete-btn{
-background:#e74c3c;
-border:none;
-padding:6px 12px;
-color:white;
-border-radius:5px;
-cursor:pointer;
+@media (max-width: 720px) {
+    .borrower-toolbar-layout {
+        align-items: stretch;
+    }
 }

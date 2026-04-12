@@ -1,135 +1,30 @@
-/* BOOK PAGE */
-
-.book-section{
-padding:60px 80px;
-display:flex;
-justify-content:center;
+.catalog-toolbar-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
 }
 
-.book-container{
-width:100%;
-max-width:1100px;
-background:white;
-color:#333;
-padding:40px;
-border-radius:15px;
-box-shadow:0 10px 30px rgba(0,0,0,0.3);
+.catalog-toolbar .search-form {
+    flex: 1 1 420px;
 }
 
-.book-title{
-text-align:center;
-font-size:32px;
-margin-bottom:30px;
-color:#5a0f13;
-font-weight:600;
+.catalog-toolbar .toolbar-actions {
+    justify-content: flex-end;
 }
 
-.book-toolbar{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:25px;
-flex-wrap:wrap;
-gap:15px;
-}
+@media (max-width: 720px) {
+    .catalog-toolbar-row {
+        align-items: stretch;
+    }
 
-.search-box{
-display:flex;
-gap:10px;
-}
+    .catalog-toolbar .toolbar-actions {
+        width: 100%;
+        justify-content: stretch;
+    }
 
-.search-box input{
-padding:10px 15px;
-border-radius:20px;
-border:1px solid #ccc;
-outline:none;
-width:250px;
-}
-
-.search-box button{
-background:#ff9f1c;
-border:none;
-padding:10px 20px;
-border-radius:20px;
-color:white;
-cursor:pointer;
-transition:0.3s;
-}
-
-.search-box button:hover{
-background:#ffb347;
-transform:translateY(-2px);
-}
-.book-actions{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-}
-
-.btn-action{
-padding:10px 20px;
-border:none;
-border-radius:25px;
-background:linear-gradient(45deg,#ff9f1c,#ffb347);
-color:white;
-font-size:14px;
-cursor:pointer;
-transition:0.3s;
-}
-
-.btn-action:hover{
-transform:translateY(-3px);
-box-shadow:0 8px 20px rgba(0,0,0,0.3);
-}
-
-.book-table{
-margin-top:20px;
-overflow-x:auto;
-}
-
-.book-table table{
-width:100%;
-border-collapse:collapse;
-}
-
-.book-table th{
-background:#5a0f13;
-color:white;
-padding:12px;
-font-size:15px;
-}
-
-.book-table td{
-padding:12px;
-text-align:center;
-border-bottom:1px solid #eee;
-}
-
-.book-table tr:hover{
-background:#f5f5f5;
-transition:0.2s;
-}
-
-.edit-btn{
-background:#3498db;
-border:none;
-padding:6px 12px;
-color:white;
-border-radius:5px;
-cursor:pointer;
-}
-
-.delete-btn{
-background:#e74c3c;
-border:none;
-padding:6px 12px;
-color:white;
-border-radius:5px;
-cursor:pointer;
-margin-left:5px;
-}
-
-.edit-btn:hover,
-.delete-btn:hover{
-opacity:0.8;
+    .catalog-toolbar .toolbar-actions .btn-inline {
+        width: 100%;
+    }
 }

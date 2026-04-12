@@ -1,64 +1,137 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block content %}
-
 <link rel="stylesheet" href="{% static 'css/borrower.css' %}">
 
-<section class="borrower-section">
+<section class="page-shell">
+    <div class="page-intro">
+        <div>
+            <span class="eyebrow">Member lounge</span>
+            <h1 class="page-title">Doc gia va thanh vien</h1>
+            <p class="page-description">
+                Man hinh quan ly doc gia duoc thiet ke de nhan vien xem nhanh thong tin lien he, trang thai
+                thanh vien va cac thao tac cap nhat ma khong bi roi mat.
+            </p>
+        </div>
+        <div class="page-stat-row">
+            <div class="page-stat">
+                <strong>80</strong>
+                <span>Tong thanh vien</span>
+            </div>
+            <div class="page-stat">
+                <strong>24</strong>
+                <span>Moi trong thang</span>
+            </div>
+        </div>
+    </div>
 
-<div class="borrower-container">
+    <div class="toolbar-card surface-card borrower-toolbar-card">
+        <div class="borrower-toolbar-layout">
+            <form class="search-form">
+                <input class="control" type="text" placeholder="Tim theo ten, email hoac ma doc gia...">
+                <button type="submit" class="btn btn-primary btn-inline">Tim doc gia</button>
+            </form>
+            <div class="toolbar-actions">
+                <button type="button" class="btn btn-secondary btn-inline">Them thanh vien</button>
+                <button type="button" class="btn-ghost btn-inline">Nhap danh sach</button>
+            </div>
+        </div>
+    </div>
 
-<h1 class="borrower-title">Quản lý người mượn</h1>
+    <div class="member-grid">
+        <article class="surface-card member-card">
+            <span class="badge gold">SV001</span>
+            <h2>Nguyen Van A</h2>
+            <p>Thanh vien thu vien tu 2024, thich nhom sach cong nghe va design.</p>
+            <div class="member-meta">
+                <span>vana@gmail.com</span>
+                <span>0123456789</span>
+                <span>Ha Noi</span>
+            </div>
+        </article>
+        <article class="surface-card member-card">
+            <span class="badge success">SV014</span>
+            <h2>Tran Minh Ha</h2>
+            <p>Ho so on dinh, muc do su dung thu vien deu va ty le tra dung han cao.</p>
+            <div class="member-meta">
+                <span>minhha@gmail.com</span>
+                <span>0987001122</span>
+                <span>Da Nang</span>
+            </div>
+        </article>
+        <article class="surface-card member-card">
+            <span class="badge warn">SV020</span>
+            <h2>Le Gia Bao</h2>
+            <p>Can nhac lich tra sach trong tuan nay, can uu tien nhom canh bao qua han.</p>
+            <div class="member-meta">
+                <span>giabao@gmail.com</span>
+                <span>0977112233</span>
+                <span>TP.HCM</span>
+            </div>
+        </article>
+    </div>
 
-<!-- TOOLBAR -->
+    <div class="table-card surface-card">
+        <div class="section-header">
+            <div>
+                <h2 class="section-title">Danh sach doc gia</h2>
+                <p class="section-subtitle">Bang du lieu co khoang thở, de quet va de dieu chinh tren man hinh hep.</p>
+            </div>
+            <span class="badge gold">Member CRM</span>
+        </div>
 
-<div class="borrower-toolbar">
-
-<div class="search-box">
-<input type="text" placeholder="Tìm người mượn...">
-<button>Tìm</button>
-</div>
-
-<div class="borrower-actions">
-<button class="btn-action">Thêm người mượn</button>
-</div>
-
-</div>
-
-<!-- TABLE -->
-
-<div class="borrower-table">
-
-<table>
-
-<tr>
-<th>Mã</th>
-<th>Tên</th>
-<th>Email</th>
-<th>Số điện thoại</th>
-<th>Địa chỉ</th>
-<th>Hành động</th>
-</tr>
-
-<tr>
-<td>SV001</td>
-<td>Nguyễn Văn A</td>
-<td>vana@gmail.com</td>
-<td>0123456789</td>
-<td>Hà Nội</td>
-<td>
-<button class="edit-btn">Sửa</button>
-<button class="delete-btn">Xóa</button>
-</td>
-</tr>
-
-</table>
-
-</div>
-
-</div>
-
+        <div class="table-scroll">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Ma</th>
+                        <th>Ho ten</th>
+                        <th>Email</th>
+                        <th>Dien thoai</th>
+                        <th>Dia chi</th>
+                        <th>Hanh dong</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="badge gold">SV001</span></td>
+                        <td>
+                            <div class="cell-title">
+                                <strong>Nguyen Van A</strong>
+                                <span>Thanh vien tich cuc</span>
+                            </div>
+                        </td>
+                        <td>vana@gmail.com</td>
+                        <td>0123456789</td>
+                        <td>Ha Noi</td>
+                        <td>
+                            <div class="inline-actions">
+                                <button class="btn btn-secondary btn-inline action-fit">Sua</button>
+                                <button class="btn-ghost btn-inline action-fit">Xoa</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge gold">SV014</span></td>
+                        <td>
+                            <div class="cell-title">
+                                <strong>Tran Minh Ha</strong>
+                                <span>Tra sach dung han</span>
+                            </div>
+                        </td>
+                        <td>minhha@gmail.com</td>
+                        <td>0987001122</td>
+                        <td>Da Nang</td>
+                        <td>
+                            <div class="inline-actions">
+                                <button class="btn btn-secondary btn-inline action-fit">Sua</button>
+                                <button class="btn-ghost btn-inline action-fit">Xoa</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </section>
-
 {% endblock %}

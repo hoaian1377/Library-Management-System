@@ -1,60 +1,105 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/book.css' %}">
 
-<link rel="stylesheet" href="{% static 'css/book.css' %}" />
-
-<section class="book-section">
-  <div class="book-container">
-    <h1 class="book-title">Quản lý sách</h1>
-
-    <!-- SEARCH -->
-    <div class="book-toolbar">
-      <form method="GET" class="search-box">
-        <input type="text" name="q" placeholder="Tìm tên sách..." value="{{ request.GET.q }}">
-        <button type="submit">Tìm</button>
-      </form>
-
-      <!-- ACTION -->
-      <div class="book-actions">
-        <a href="#">
-          <button class="btn-action">Thêm sách</button>
-        </a>
-      </div>
+<section class="page-shell">
+    <div class="page-intro">
+        <div>
+            <span class="eyebrow">Catalog atelier</span>
+            <h1 class="page-title">Bo suu tap sach</h1>
+            <p class="page-description">
+                Theo doi cac tua sach hien co, tim nhanh theo ten va giu cho kho du lieu luon de doc,
+                de thao tac trong ca desktop lan mobile.
+            </p>
+        </div>
+        <div class="page-stat-row">
+            <div class="page-stat">
+                <strong>{{ books|length }}</strong>
+                <span>Sach dang hien thi</span>
+            </div>
+            <div class="page-stat">
+                <strong>{{ request.GET.q|default:"All" }}</strong>
+                <span>Trang thai tim kiem</span>
+            </div>
+        </div>
     </div>
 
-    <!-- TABLE -->
-    <div class="book-table">
-      <table>
-        <thead>
-          <tr>
-            <th>Mã sách</th>
-            <th>Tên sách</th>
-            <th>Tác giả</th>
-            <th>Năm XB</th>
-            <th>Số lượng</th>
-          </tr>
-        </thead>
+    <div class="toolbar-card surface-card catalog-toolbar">
+        <div class="section-header">
+            <div>
+                <h2 class="section-title">Tim kiem va dieu huong</h2>
+                <p class="section-subtitle">Mot khu vuc thao tac gon gang cho nhan vien thu vien.</p>
+            </div>
+        </div>
 
-        <tbody>
-          {% for book in books %}
-          <tr>
-            <td>{{ book.sachid }}</td>
-            <td>{{ book.tensach }}</td>
-            <td>{{ book.tacgiaid.tentacgia }}</td>
-            <td>{{ book.namxuatban }}</td>
-            <td>{{ book.soluong }}</td>
-          </tr>
+        <div class="catalog-toolbar-row">
+            <form method="GET" class="search-form">
+                <input class="control" type="text" name="q" placeholder="Tim ten sach, tac gia hoac chu de..." value="{{ request.GET.q }}">
+                <button type="submit" class="btn btn-primary btn-inline">Tim sach</button>
+            </form>
 
-          {% empty %}
-          <tr>
-            <td colspan="7">Không có dữ liệu sách</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+            <div class="toolbar-actions">
+                <button type="button" class="btn btn-secondary btn-inline">Them dau sach</button>
+                <button type="button" class="btn-ghost btn-inline">Xuat danh muc</button>
+            </div>
+        </div>
     </div>
-  </div>
+
+    <div class="table-card surface-card">
+        <div class="section-header">
+            <div>
+                <h2 class="section-title">Danh muc hien tai</h2>
+                <p class="section-subtitle">Bieu dien du lieu theo phong cach sach se, uu tien kha nang quet nhanh.</p>
+            </div>
+            <span class="badge gold">Live catalog</span>
+        </div>
+
+        <div class="table-scroll">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Ma sach</th>
+                        <th>Tieu de</th>
+                        <th>Tac gia</th>
+                        <th>Nam XB</th>
+                        <th>So luong</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book in books %}
+                    <tr>
+                        <td><span class="badge gold">{{ book.sachid }}</span></td>
+                        <td>
+                            <div class="cell-title">
+                                <strong>{{ book.tensach }}</strong>
+                                <span>{{ book.nhaxuatban|default:"Kho sach noi bo" }}</span>
+                            </div>
+                        </td>
+                        <td>{{ book.tacgiaid.tentacgia }}</td>
+                        <td>{{ book.namxuatban }}</td>
+                        <td>
+                            {% if book.soluong > 5 %}
+                            <span class="badge success">{{ book.soluong }} ban</span>
+                            {% elif book.soluong > 0 %}
+                            <span class="badge warn">{{ book.soluong }} ban</span>
+                            {% else %}
+                            <span class="badge danger">Het sach</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5">
+                            <div class="empty-state">
+                                Chua co du lieu sach trong danh muc hien tai.
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </section>
-
 {% endblock %}

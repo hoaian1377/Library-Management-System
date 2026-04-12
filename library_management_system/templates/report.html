@@ -1,72 +1,174 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block content %}
-
 <link rel="stylesheet" href="{% static 'css/report.css' %}">
 
-<section class="report-section">
+<section class="page-shell">
+    <div class="page-intro">
+        <div>
+            <span class="eyebrow">Insight board</span>
+            <h1 class="page-title">Thong ke va bao cao</h1>
+            <p class="page-description">
+                Dashboard tong hop duoc trinh bay theo tinh than premium: so lieu noi bat, phan tich gon
+                va cac bang canh bao de nguoi quan ly nhin thay tinh hinh ngay lap tuc.
+            </p>
+        </div>
+        <div class="page-stat-row">
+            <div class="page-stat">
+                <strong>Q1</strong>
+                <span>Ky bao cao hien tai</span>
+            </div>
+            <div class="page-stat">
+                <strong>92%</strong>
+                <span>Do phu du lieu</span>
+            </div>
+        </div>
+    </div>
 
-<div class="report-container">
+    <div class="summary-grid">
+        <article class="summary-card">
+            <span>Tong so sach</span>
+            <strong>120</strong>
+        </article>
+        <article class="summary-card">
+            <span>Sach dang muon</span>
+            <strong>35</strong>
+        </article>
+        <article class="summary-card">
+            <span>Sach qua han</span>
+            <strong>05</strong>
+        </article>
+        <article class="summary-card">
+            <span>Nguoi muon</span>
+            <strong>80</strong>
+        </article>
+    </div>
 
-<h1 class="report-title">Thống kê báo cáo</h1>
+    <div class="split-grid">
+        <article class="chart-card surface-card">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title">Luu thong theo tuan</h2>
+                    <p class="section-subtitle">Bieu do cot mo phong phuc vu viec doc nhanh tren dashboard.</p>
+                </div>
+                <span class="badge gold">Updated today</span>
+            </div>
 
-<!-- CARDS -->
+            <div class="chart-bars">
+                <div class="chart-bar">
+                    <div class="chart-bar-fill" style="height: 46%;"></div>
+                    <label>T2</label>
+                </div>
+                <div class="chart-bar">
+                    <div class="chart-bar-fill" style="height: 64%;"></div>
+                    <label>T3</label>
+                </div>
+                <div class="chart-bar">
+                    <div class="chart-bar-fill" style="height: 58%;"></div>
+                    <label>T4</label>
+                </div>
+                <div class="chart-bar">
+                    <div class="chart-bar-fill" style="height: 82%;"></div>
+                    <label>T5</label>
+                </div>
+                <div class="chart-bar">
+                    <div class="chart-bar-fill" style="height: 72%;"></div>
+                    <label>T6</label>
+                </div>
+                <div class="chart-bar">
+                    <div class="chart-bar-fill" style="height: 54%;"></div>
+                    <label>T7</label>
+                </div>
+            </div>
 
-<div class="report-cards">
+            <div class="chart-legend">
+                <span>Phieu muon da xu ly</span>
+                <span>Xu huong tang trong gio cao diem</span>
+            </div>
+        </article>
 
-<div class="card">
-<h3>Tổng số sách</h3>
-<p>120</p>
-</div>
+        <aside class="insight-card surface-card">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title">Diem nhan quan tri</h2>
+                    <p class="section-subtitle">Nhung thong tin can ra quyet dinh nhanh trong ngay.</p>
+                </div>
+            </div>
 
-<div class="card">
-<h3>Sách đang mượn</h3>
-<p>35</p>
-</div>
+            <div class="list-stack">
+                <div class="list-item">
+                    <span class="list-item-index">A</span>
+                    <div>
+                        <h3>Nhom sach cong nghe dang duoc muon nhieu</h3>
+                        <p>Can can nhac bo sung dau sach moi cho khu ke hot trong thang nay.</p>
+                    </div>
+                </div>
+                <div class="list-item">
+                    <span class="list-item-index">B</span>
+                    <div>
+                        <h3>Ty le tra dung han dang kha tot</h3>
+                        <p>Co the day them chuong trinh nhac han de giam tiep sach qua han.</p>
+                    </div>
+                </div>
+                <div class="list-item">
+                    <span class="list-item-index">C</span>
+                    <div>
+                        <h3>Khu canh bao phat hien 5 phieu den han</h3>
+                        <p>Uu tien xu ly nhom doc gia can lien he trong khung gio dau buoi chieu.</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
 
-<div class="card">
-<h3>Sách quá hạn</h3>
-<p>5</p>
-</div>
+    <div class="table-card surface-card">
+        <div class="section-header">
+            <div>
+                <h2 class="section-title">Danh sach sach qua han</h2>
+                <p class="section-subtitle">Bang canh bao dat cuoi dashboard de nguoi dung xu ly ngay sau khi doc so lieu tong.</p>
+            </div>
+            <span class="badge danger">Critical follow-up</span>
+        </div>
 
-<div class="card">
-<h3>Người mượn</h3>
-<p>80</p>
-</div>
-
-</div>
-
-<!-- TABLE -->
-
-<div class="report-table">
-
-<h2>Danh sách sách quá hạn</h2>
-
-<table>
-
-<tr>
-<th>Mã sách</th>
-<th>Tên sách</th>
-<th>Người mượn</th>
-<th>Ngày mượn</th>
-<th>Ngày phải trả</th>
-</tr>
-
-<tr>
-<td>001</td>
-<td>Django Web</td>
-<td>Nguyễn Văn A</td>
-<td>01-03-2026</td>
-<td>10-03-2026</td>
-</tr>
-
-</table>
-
-</div>
-
-</div>
-
+        <div class="table-scroll">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Ma sach</th>
+                        <th>Tieu de</th>
+                        <th>Nguoi muon</th>
+                        <th>Ngay muon</th>
+                        <th>Han tra</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="badge gold">001</span></td>
+                        <td>
+                            <div class="cell-title">
+                                <strong>Django Web</strong>
+                                <span>Cong nghe thong tin</span>
+                            </div>
+                        </td>
+                        <td>Nguyen Van A</td>
+                        <td>01-03-2026</td>
+                        <td><span class="badge danger">10-03-2026</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge gold">009</span></td>
+                        <td>
+                            <div class="cell-title">
+                                <strong>SQL Server Co Ban</strong>
+                                <span>Database fundamentals</span>
+                            </div>
+                        </td>
+                        <td>Tran Minh Ha</td>
+                        <td>04-03-2026</td>
+                        <td><span class="badge danger">13-03-2026</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </section>
-
 {% endblock %}

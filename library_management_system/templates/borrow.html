@@ -1,66 +1,164 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block content %}
-
 <link rel="stylesheet" href="{% static 'css/borrow.css' %}">
 
-<section class="borrow-section">
+<section class="page-shell">
+    <div class="page-intro">
+        <div>
+            <span class="eyebrow">Circulation studio</span>
+            <h1 class="page-title">Muon tra sach</h1>
+            <p class="page-description">
+                Giao dien luu thong duoc to chuc theo tung khoi ro rang: thong tin phieu muon, danh sach
+                xu ly nhanh va nhung canh bao de nhan vien thao tac chinh xac hon.
+            </p>
+        </div>
+        <div class="page-stat-row">
+            <div class="page-stat">
+                <strong>182</strong>
+                <span>Giao dich hom nay</span>
+            </div>
+            <div class="page-stat">
+                <strong>17</strong>
+                <span>Phieu can doi soat</span>
+            </div>
+        </div>
+    </div>
 
-<div class="borrow-container">
+    <div class="summary-grid">
+        <article class="summary-card">
+            <span>Dang muon</span>
+            <strong>35</strong>
+        </article>
+        <article class="summary-card">
+            <span>Tra dung han</span>
+            <strong>91%</strong>
+        </article>
+        <article class="summary-card">
+            <span>Qua han</span>
+            <strong>05</strong>
+        </article>
+        <article class="summary-card">
+            <span>Cho duyet</span>
+            <strong>08</strong>
+        </article>
+    </div>
 
-<h1 class="borrow-title">Quản lý mượn sách</h1>
+    <div class="split-grid">
+        <div class="form-card surface-card">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title">Tao phieu muon moi</h2>
+                    <p class="section-subtitle">Bieu mau toi gian, uu tien cac truong thong tin can thiet.</p>
+                </div>
+            </div>
 
-<!-- FORM MƯỢN SÁCH -->
+            <form class="borrow-form-grid">
+                <input class="surface-input" type="text" placeholder="Ten nguoi muon">
+                <input class="surface-input" type="text" placeholder="Ma doc gia">
+                <input class="surface-input" type="text" placeholder="Ten sach">
+                <select class="surface-select">
+                    <option>Loai phieu</option>
+                    <option>Muon tai thu vien</option>
+                    <option>Muon mang ve</option>
+                </select>
+                <input class="surface-input" type="date">
+                <input class="surface-input" type="date">
+                <div class="inline-actions borrow-actions-full">
+                    <button type="button" class="btn btn-primary btn-inline">Cho muon ngay</button>
+                    <button type="button" class="btn-ghost btn-inline">Luu nhap tam</button>
+                </div>
+            </form>
+        </div>
 
-<div class="borrow-form">
+        <aside class="insight-card surface-card">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title">Quy trinh de theo doi</h2>
+                    <p class="section-subtitle">Cach bo tri giup nhan vien doc trang thai nhanh hon.</p>
+                </div>
+            </div>
 
-<input type="text" placeholder="Tên người mượn">
+            <div class="list-stack">
+                <div class="list-item">
+                    <span class="list-item-index">01</span>
+                    <div>
+                        <h3>Xac thuc doc gia</h3>
+                        <p>Kiem tra the, thong tin lien he va so sach dang muon truoc khi lap phieu.</p>
+                    </div>
+                </div>
+                <div class="list-item">
+                    <span class="list-item-index">02</span>
+                    <div>
+                        <h3>Chon tua sach</h3>
+                        <p>Tim theo tieu de hoac ma sach, sau do chot ngay tra du kien trong cung mot khu vuc.</p>
+                    </div>
+                </div>
+                <div class="list-item">
+                    <span class="list-item-index">03</span>
+                    <div>
+                        <h3>Theo doi qua han</h3>
+                        <p>Danh dau nhung phieu can xu ly som va dua vao dashboard bao cao.</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
 
-<input type="text" placeholder="Tên sách">
+    <div class="table-card surface-card">
+        <div class="section-header">
+            <div>
+                <h2 class="section-title">Danh sach luu thong</h2>
+                <p class="section-subtitle">Mau du lieu demo, trinh bay theo phong cach dashboard cao cap.</p>
+            </div>
+            <span class="badge warn">Needs review</span>
+        </div>
 
-<input type="date">
-
-<input type="date">
-
-<button class="borrow-btn">Cho mượn</button>
-
-</div>
-
-<!-- BẢNG DANH SÁCH MƯỢN -->
-
-<div class="borrow-table">
-
-<table>
-
-<tr>
-<th>Mã</th>
-<th>Người mượn</th>
-<th>Sách</th>
-<th>Ngày mượn</th>
-<th>Ngày trả</th>
-<th>Trạng thái</th>
-<th>Hành động</th>
-</tr>
-
-<tr>
-<td>001</td>
-<td>Nguyễn Văn A</td>
-<td>Django Web</td>
-<td>20-03-2026</td>
-<td>30-03-2026</td>
-<td>Đang mượn</td>
-<td>
-<button class="return-btn">Trả sách</button>
-</td>
-</tr>
-
-</table>
-
-</div>
-
-</div>
-
+        <div class="table-scroll">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Ma</th>
+                        <th>Nguoi muon</th>
+                        <th>Sach</th>
+                        <th>Ngay muon</th>
+                        <th>Ngay tra</th>
+                        <th>Trang thai</th>
+                        <th>Hanh dong</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="badge gold">001</span></td>
+                        <td>
+                            <div class="cell-title">
+                                <strong>Nguyen Van A</strong>
+                                <span>SV001 · Premium member</span>
+                            </div>
+                        </td>
+                        <td>Django Web</td>
+                        <td>20-03-2026</td>
+                        <td>30-03-2026</td>
+                        <td><span class="badge warn">Dang muon</span></td>
+                        <td><button class="btn btn-secondary btn-inline action-fit">Tra sach</button></td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge gold">002</span></td>
+                        <td>
+                            <div class="cell-title">
+                                <strong>Tran Minh Ha</strong>
+                                <span>SV014 · Reading room</span>
+                            </div>
+                        </td>
+                        <td>SQL Server Co Ban</td>
+                        <td>16-03-2026</td>
+                        <td>24-03-2026</td>
+                        <td><span class="badge success">Da tra</span></td>
+                        <td><button class="btn-ghost btn-inline action-fit">Xem lai</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </section>
-
 {% endblock %}
