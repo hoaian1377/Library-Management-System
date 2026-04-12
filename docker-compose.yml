@@ -1,0 +1,18 @@
+services:
+  web:
+    build:
+      context: .
+    container_name: library-management-web
+    environment:
+      DJANGO_SETTINGS_MODULE: library_management.settings
+      DB_HOST: host.docker.internal
+      DB_PORT: "1433"
+      DB_NAME: QLS
+      DB_USER: sa
+      DB_PASSWORD: YourStrong@Pass123
+      DB_DRIVER: ODBC Driver 18 for SQL Server
+      DB_EXTRA_PARAMS: TrustServerCertificate=yes
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app

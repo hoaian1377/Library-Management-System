@@ -1,44 +1,320 @@
-from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from datetime import date
+from functools import wraps
+from urllib.parse import urlencode
+
 from django.contrib import messages
-from .models import Taikhoan, Sach
+from django.contrib.auth.hashers import check_password, make_password
+from django.db import transaction
+from django.db.models import Max
+from django.http import JsonResponse
+from django.shortcuts import render, redirect
+from django.urls import reverse
+
+from .models import Nhanvien, Taikhoan, Sach
+
+
+def _build_url(route_name, **params):
+    url = reverse(route_name)
+    filtered_params = {key: value for key, value in params.items() if value is not None}
+    if not filtered_params:
+        return url
+    return f"{url}?{urlencode(filtered_params)}"
+
+
+def _is_ajax(request):
+    return request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+
+
+def _json_or_redirect(request, ok, message, *, redirect_to='base', modal=None, status=200, extra=None):
+    if _is_ajax(request):
+        payload = {'ok': ok, 'message': message}
+        if extra:
+            payload.update(extra)
+        return JsonResponse(payload, status=status)
+
+    if message:
+        feedback = messages.success if ok else messages.error
+        feedback(request, message)
+
+    return redirect(_build_url(redirect_to, auth=modal))
+
+
+def _require_session_auth(view_func):
+    @wraps(view_func)
+    def wrapped(request, *args, **kwargs):
+        if request.session.get('user'):
+            return view_func(request, *args, **kwargs)
+
+        messages.info(request, "Vui lòng đăng nhập để sử dụng chức năng này.")
+        return redirect(_build_url('base', auth='login'))
+
+    return wrapped
+
+
+def _generate_employee_code():
+    next_id = (Nhanvien.objects.aggregate(max_id=Max('nhanvienid')).get('max_id') or 0) + 1
+    code = f"NV{next_id:03d}"
+    while Nhanvien.objects.filter(manv=code).exists():
+        next_id += 1
+        code = f"NV{next_id:03d}"
+    return code
+
+
+def _account_matches_password(account, raw_password):
+    stored_password = account.matkhau or ''
+
+    try:
+        if check_password(raw_password, stored_password):
+            return True
+    except ValueError:
+        pass
+
+    if stored_password == raw_password:
+        account.matkhau = make_password(raw_password)
+        account.save(update_fields=['matkhau'])
+        return True
+
+    return False
+
+
+def _store_session_user(request, account, remember_me=False):
+    request.session.cycle_key()
+    request.session['user'] = account.username
+    request.session['display_name'] = account.nhanvienid.hoten
+    request.session['role'] = account.vaitro
+    request.session['user_id'] = account.taikhoanid
+
+    if remember_me:
+        request.session.set_expiry(60 * 60 * 24 * 14)
+    else:
+        request.session.set_expiry(0)
+
+
+def _get_account_by_email(email):
+    return (
+        Taikhoan.objects.select_related('nhanvienid')
+        .filter(nhanvienid__email__iexact=email)
+        .first()
+    )
+
+
 # Create your views here.
 def base(request):
     return render(request,'base.html')
+
+
+@_require_session_auth
 def borrow(request):
     return render(request,'borrow.html')
+
+
+@_require_session_auth
 def borrower(request):
     return render(request,'borrower.html')
+
+
+@_require_session_auth
 def report(request):
     return render(request,'report.html')
 
-def login_view(request):
-    if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-        user = Taikhoan.objects.filter(username=username, matkhau=password).first()
-        if user:
-            request.session['user'] = username
-            return redirect('base')
-        else:
-            messages.error(request, "Sai tài khoản hoặc mật khẩu")
 
-    return render(request, "login_modal.html")
-  
+def login_view(request):
+    if request.method != "POST":
+        return redirect(_build_url('base', auth='login'))
+
+    username = request.POST.get("username", "").strip()
+    password = request.POST.get("password", "")
+    remember_me = request.POST.get("remember_me") == "on"
+    user = Taikhoan.objects.select_related('nhanvienid').filter(username=username).first()
+
+    if user and _account_matches_password(user, password):
+        _store_session_user(request, user, remember_me=remember_me)
+        messages.success(request, f"Chào mừng {user.nhanvienid.hoten} quay lại.")
+        return redirect('base')
+
+    messages.error(request, "Sai tài khoản hoặc mật khẩu")
+    return redirect(_build_url('base', auth='login'))
+
+
+def register_view(request):
+    if request.method != "POST":
+        return redirect(_build_url('base', auth='register'))
+
+    full_name = request.POST.get("full_name", "").strip()
+    username = request.POST.get("username", "").strip()
+    email = request.POST.get("email", "").strip().lower()
+    phone = request.POST.get("phone", "").strip()
+    password = request.POST.get("password", "")
+    confirm_password = request.POST.get("confirm_password", "")
+
+    if not all([full_name, username, email, phone, password, confirm_password]):
+        return _json_or_redirect(
+            request,
+            False,
+            "Vui lòng nhập đầy đủ thông tin đăng ký.",
+            modal='register',
+            status=400,
+        )
+
+    if password != confirm_password:
+        return _json_or_redirect(
+            request,
+            False,
+            "Mật khẩu xác nhận không khớp.",
+            modal='register',
+            status=400,
+        )
+
+    if len(password) < 6:
+        return _json_or_redirect(
+            request,
+            False,
+            "Mật khẩu phải có ít nhất 6 ký tự.",
+            modal='register',
+            status=400,
+        )
+
+    if Taikhoan.objects.filter(username=username).exists():
+        return _json_or_redirect(
+            request,
+            False,
+            "Tên đăng nhập đã tồn tại.",
+            modal='register',
+            status=400,
+        )
+
+    if _get_account_by_email(email):
+        return _json_or_redirect(
+            request,
+            False,
+            "Email này đã được dùng cho tài khoản khác.",
+            modal='register',
+            status=400,
+        )
+
+    with transaction.atomic():
+        nhanvien = Nhanvien.objects.create(
+            manv=_generate_employee_code(),
+            hoten=full_name,
+            email=email,
+            sdt=phone,
+            chucvu="Thanh vien",
+            ngayvaolam=date.today(),
+        )
+        Taikhoan.objects.create(
+            username=username,
+            matkhau=make_password(password),
+            vaitro="user",
+            nhanvienid=nhanvien,
+        )
+
+    return _json_or_redirect(
+        request,
+        True,
+        "Đăng ký tài khoản thành công. Vui lòng đăng nhập.",
+        modal='login',
+        extra={'openModal': 'login'},
+    )
+
+
+def forgot_password_verify_view(request):
+    if request.method != "POST":
+        return redirect(_build_url('base', auth='forgot'))
+
+    email = request.POST.get("email", "").strip().lower()
+    account = _get_account_by_email(email)
+
+    if not account:
+        return _json_or_redirect(
+            request,
+            False,
+            "Không tìm thấy tài khoản theo email này.",
+            modal='forgot',
+            status=404,
+        )
+
+    return _json_or_redirect(
+        request,
+        True,
+        "Email hợp lệ. Bạn có thể đặt lại mật khẩu.",
+        modal='forgot',
+        extra={'email': account.nhanvienid.email},
+    )
+
+
+def forgot_password_reset_view(request):
+    if request.method != "POST":
+        return redirect(_build_url('base', auth='forgot'))
+
+    email = request.POST.get("email", "").strip().lower()
+    new_password = request.POST.get("new_password", "")
+    confirm_password = request.POST.get("confirm_password", "")
+
+    if not email:
+        return _json_or_redirect(
+            request,
+            False,
+            "Thiếu email xác thực để đặt lại mật khẩu.",
+            modal='forgot',
+            status=400,
+        )
+
+    if new_password != confirm_password:
+        return _json_or_redirect(
+            request,
+            False,
+            "Mật khẩu xác nhận không khớp.",
+            modal='forgot',
+            status=400,
+        )
+
+    if len(new_password) < 6:
+        return _json_or_redirect(
+            request,
+            False,
+            "Mật khẩu mới phải có ít nhất 6 ký tự.",
+            modal='forgot',
+            status=400,
+        )
+
+    account = _get_account_by_email(email)
+    if not account:
+        return _json_or_redirect(
+            request,
+            False,
+            "Không tìm thấy tài khoản theo email này.",
+            modal='forgot',
+            status=404,
+        )
+
+    account.matkhau = make_password(new_password)
+    account.save(update_fields=['matkhau'])
+
+    return _json_or_redirect(
+        request,
+        True,
+        "Đổi mật khẩu thành công. Vui lòng đăng nhập lại.",
+        modal='login',
+        extra={'openModal': 'login'},
+    )
+
+
 def logout_view(request):
     request.session.flush()
+    messages.success(request, "Bạn đã đăng xuất.")
     return redirect('base')
 
 
 ######################### Sach #######################
 
+@_require_session_auth
 def book_list(request):
     books = Sach.objects.select_related('tacgiaid').all()
 
     # SEARCH
     keyword = request.GET.get('q')
     if keyword:
-        books = books.filter(ten_sach__icontains=keyword)
+        books = books.filter(tensach__icontains=keyword)
 
     return render(request, 'book.html', {
         'books': books

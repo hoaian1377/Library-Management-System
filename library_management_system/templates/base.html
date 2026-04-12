@@ -64,7 +64,8 @@
                     <a href="#">Tài Khoản</a>
                   <ul class="submenu">
                     {% if request.session.user %}
-                            <li>Chào mừng {{ request.session.user }}</li>
+                            <li>Chào mừng {{ request.session.display_name|default:request.session.user }}</li>
+                            <li>Vai trò: {{ request.session.role|default:"user" }}</li>
                             <li><a href="{% url 'logout' %}">Đăng xuất</a></li>
                         {% else %}
                             <li><a href="{% url 'login_modal' %}" id="show-login-btn">Đăng nhập</a></li>
@@ -77,6 +78,14 @@
 
         </nav>
     </header>
+
+    {% if messages %}
+    <div class="flash-messages">
+        {% for message in messages %}
+        <div class="flash-message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
     {% block content %}
 
@@ -121,6 +130,32 @@
 
     <!-- Include Modal Quên mật khẩu -->
     {% include 'forgot_password_modal.html' %}
+
+    <script>
+        (() => {
+            const params = new URLSearchParams(window.location.search);
+            const authModal = params.get('auth');
+            const modalByName = {
+                login: 'login-modal',
+                register: 'register-modal',
+                forgot: 'forgot-password-modal',
+            };
+
+            const modalId = modalByName[authModal];
+            if (modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.style.display = 'flex';
+                    params.delete('auth');
+                    const nextQuery = params.toString();
+                    const nextUrl = nextQuery
+                        ? `${window.location.pathname}?${nextQuery}${window.location.hash}`
+                        : `${window.location.pathname}${window.location.hash}`;
+                    window.history.replaceState({}, document.title, nextUrl);
+                }
+            }
+        })();
+    </script>
 
 </body>
 

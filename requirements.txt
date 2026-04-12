@@ -1,0 +1,4 @@
+Django==5.2.13
+mssql-django==1.7
+pyodbc==5.3.0
+pytz==2026.1.post1

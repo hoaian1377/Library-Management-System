@@ -10,7 +10,69 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
+
+try:
+    import pyodbc
+except ImportError:  # pragma: no cover - dependency is installed in runtime environments
+    pyodbc = None
+
+
+def _get_env(name, default=None):
+    value = os.getenv(name)
+    return default if value is None else value
+
+
+def _get_database_options():
+    explicit_driver = _get_env('DB_DRIVER')
+    available_drivers = []
+
+    if pyodbc is not None:
+        try:
+            available_drivers = pyodbc.drivers()
+        except Exception:
+            available_drivers = []
+
+    preferred_drivers = [
+        'ODBC Driver 18 for SQL Server',
+        'ODBC Driver 17 for SQL Server',
+        'SQL Server Native Client 11.0',
+        'SQL Server Native Client 10.0',
+        'SQL Server',
+    ]
+
+    driver = explicit_driver or next(
+        (candidate for candidate in preferred_drivers if candidate in available_drivers),
+        'ODBC Driver 18 for SQL Server',
+    )
+
+    extra_params = _get_env('DB_EXTRA_PARAMS')
+    if extra_params is None and driver.startswith('ODBC Driver '):
+        extra_params = 'TrustServerCertificate=yes'
+
+    options = {
+        'driver': driver,
+    }
+
+    # The legacy Windows "SQL Server" driver requires SERVER instead of
+    # SERVERNAME, otherwise mssql-django builds an invalid connection string.
+    if driver == 'SQL Server':
+        options['host_is_server'] = True
+
+    if extra_params:
+        options['extra_params'] = extra_params
+
+    return options
+
+
+DATABASE_OPTIONS = _get_database_options()
+DATABASE_HOST = _get_env('DB_HOST', '127.0.0.1')
+DATABASE_PORT = _get_env('DB_PORT', '1433')
+
+if DATABASE_OPTIONS['driver'] == 'SQL Server' and DATABASE_PORT:
+    DATABASE_HOST = f'{DATABASE_HOST},{DATABASE_PORT}'
+    DATABASE_PORT = ''
 
 # Build paths inside the project
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -86,16 +148,19 @@ WSGI_APPLICATION = 'library_management.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'mssql',
-        'NAME': 'QLS',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '',
-        'OPTIONS': {
-            'driver': 'ODBC Driver 17 for SQL Server',
-        },
+        'NAME': os.getenv('DB_NAME', 'QLS'),
+        'USER': os.getenv('DB_USER', 'sa'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'YourStrong@Pass123'),
+        'HOST': DATABASE_HOST,
+        'PORT': DATABASE_PORT,
+        'OPTIONS': DATABASE_OPTIONS,
     }
 }
+
+# Keep auth/session flows lightweight for the demo app so the project
+# doesn't depend on creating Django's default DB tables before first run.
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 
 
 # Password validation
