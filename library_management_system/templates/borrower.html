@@ -1,136 +1,20 @@
 {% extends 'base.html' %}
-{% load static %}
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/borrower.css' %}">
-
-<section class="page-shell">
-    <div class="page-intro">
+<section class="page-card">
+    <div class="page-header">
         <div>
-            <span class="eyebrow">Phòng thành viên</span>
-            <h1 class="page-title">Độc giả và thành viên</h1>
-            <p class="page-description">
-                Màn hình quản lý độc giả được thiết kế để xem nhanh hồ sơ, trạng thái thành viên
-                và các thao tác cập nhật mà không bị rối mắt.
+            <h2 class="page-title">Người mượn</h2>
+            <p class="page-text">Hiện chưa có dữ liệu người mượn thật từ backend, nên giao diện chỉ giữ phần thông báo cần thiết.</p>
+        </div>
+    </div>
+
+    <div class="notice-card">
+        <div class="empty-block">
+            <h3>Chưa có dữ liệu thật</h3>
+            <p>
+                Sau khi hoàn thiện backend người mượn, màn hình này sẽ hiển thị danh sách độc giả,
+                thông tin liên hệ và các thao tác quản lý tương ứng.
             </p>
-        </div>
-        <div class="page-stat-row">
-            <div class="page-stat">
-                <strong>80</strong>
-                <span>Tổng thành viên</span>
-            </div>
-            <div class="page-stat">
-                <strong>24</strong>
-                <span>Mới trong tháng</span>
-            </div>
-        </div>
-    </div>
-
-    <div class="toolbar-card surface-card borrower-toolbar-card">
-        <div class="borrower-toolbar-layout">
-            <form class="search-form">
-                <input class="control" type="text" placeholder="Tìm theo tên, email hoặc mã độc giả...">
-                <button type="submit" class="btn btn-primary btn-inline">Tìm độc giả</button>
-            </form>
-            <div class="toolbar-actions">
-                <button type="button" class="btn btn-secondary btn-inline">Thêm thành viên</button>
-                <button type="button" class="btn-ghost btn-inline">Nhập danh sách</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="member-grid">
-        <article class="surface-card member-card">
-            <span class="badge gold">SV001</span>
-            <h2>Nguyễn Văn A</h2>
-            <p>Thành viên từ 2024, yêu thích nhóm sách công nghệ và thiết kế.</p>
-            <div class="member-meta">
-                <span>vana@gmail.com</span>
-                <span>0123456789</span>
-                <span>Hà Nội</span>
-            </div>
-        </article>
-        <article class="surface-card member-card">
-            <span class="badge success">SV014</span>
-            <h2>Trần Minh Hà</h2>
-            <p>Hồ sơ ổn định, mức độ sử dụng đều và tỷ lệ trả đúng hạn cao.</p>
-            <div class="member-meta">
-                <span>minhha@gmail.com</span>
-                <span>0987001122</span>
-                <span>Đà Nẵng</span>
-            </div>
-        </article>
-        <article class="surface-card member-card">
-            <span class="badge warn">SV020</span>
-            <h2>Lê Gia Bảo</h2>
-            <p>Cần nhắc lịch trả sách trong tuần này, nên ưu tiên theo dõi sớm.</p>
-            <div class="member-meta">
-                <span>giabao@gmail.com</span>
-                <span>0977112233</span>
-                <span>TP. HCM</span>
-            </div>
-        </article>
-    </div>
-
-    <div class="table-card surface-card">
-        <div class="section-header">
-            <div>
-                <h2 class="section-title">Danh sách độc giả</h2>
-                <p class="section-subtitle">Bảng dữ liệu có nhiều khoảng thở, dễ quét và dễ dùng trên màn hình hẹp.</p>
-            </div>
-            <span class="badge gold">Quản lý thành viên</span>
-        </div>
-
-        <div class="table-scroll">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Mã</th>
-                        <th>Họ tên</th>
-                        <th>Email</th>
-                        <th>Điện thoại</th>
-                        <th>Địa chỉ</th>
-                        <th>Hành động</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><span class="badge gold">SV001</span></td>
-                        <td>
-                            <div class="cell-title">
-                                <strong>Nguyễn Văn A</strong>
-                                <span>Thành viên tích cực</span>
-                            </div>
-                        </td>
-                        <td>vana@gmail.com</td>
-                        <td>0123456789</td>
-                        <td>Hà Nội</td>
-                        <td>
-                            <div class="inline-actions">
-                                <button class="btn btn-secondary btn-inline action-fit">Sửa</button>
-                                <button class="btn-ghost btn-inline action-fit">Xóa</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><span class="badge gold">SV014</span></td>
-                        <td>
-                            <div class="cell-title">
-                                <strong>Trần Minh Hà</strong>
-                                <span>Trả sách đúng hạn</span>
-                            </div>
-                        </td>
-                        <td>minhha@gmail.com</td>
-                        <td>0987001122</td>
-                        <td>Đà Nẵng</td>
-                        <td>
-                            <div class="inline-actions">
-                                <button class="btn btn-secondary btn-inline action-fit">Sửa</button>
-                                <button class="btn-ghost btn-inline action-fit">Xóa</button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
     </div>
 </section>

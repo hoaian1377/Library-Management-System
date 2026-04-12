@@ -4,228 +4,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thư viện Atelier</title>
+    <title>Thư viện TCSOFT</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/login_modal.css' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="ambient ambient-one"></div>
-    <div class="ambient ambient-two"></div>
-    <div class="ambient ambient-grid"></div>
-
-    <header class="site-header">
-        <nav class="navbar">
-            <a href="{% url 'base' %}" class="brand">
-                <span class="brand-mark">L</span>
-                <span class="brand-copy">
-                    <span class="brand-name">Library</span>
-                    <span class="brand-tagline">Không gian quản lý thư viện</span>
-                </span>
-            </a>
-
-            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-
-            <div class="nav-panel" id="site-menu">
-                <ul class="menu">
-                    {% if request.session.user and request.session.role == 'admin' %}
-                    <li class="dropdown">
-                        <a href="#" class="menu-link">Sách</a>
-                        <ul class="submenu">
-                            <li><a href="{% url 'book_list' %}">Thư viện sách</a></li>
-                            <li><a href="{% url 'book_list' %}">Khám phá đầu sách</a></li>
-                            <li><a href="{% url 'book_list' %}">Kho lưu trữ</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="menu-link">Mượn trả</a>
-                        <ul class="submenu">
-                            <li><a href="{% url 'borrow' %}">Lưu thông sách</a></li>
-                            <li><a href="{% url 'borrow' %}">Lịch sử phiếu mượn</a></li>
-                            <li><a href="{% url 'borrow' %}">Trả sách nhanh</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="menu-link">Độc giả</a>
-                        <ul class="submenu">
-                            <li><a href="{% url 'borrower' %}">Danh sách độc giả</a></li>
-                            <li><a href="{% url 'borrower' %}">Hồ sơ thành viên</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="menu-link">Báo cáo</a>
-                        <ul class="submenu">
-                            <li><a href="{% url 'report' %}">Tổng quan hệ thống</a></li>
-                            <li><a href="{% url 'report' %}">Sách quá hạn</a></li>
-                            <li><a href="{% url 'report' %}">Hiệu suất vận hành</a></li>
-                        </ul>
-                    </li>
-                    {% elif request.session.user and request.session.role == 'user' %}
-                    <li class="dropdown">
-                        <a href="#" class="menu-link">Sách</a>
-                        <ul class="submenu">
-                            <li><a href="{% url 'book_list' %}">Tra cứu sách</a></li>
-                            <li><a href="{% url 'book_list' %}">Kho tham khảo</a></li>
-                        </ul>
-                    </li>
-                    {% endif %}
-
-                    <li class="dropdown account-dropdown">
-                        <a href="#" class="menu-link account-link">Tài khoản</a>
-                        <ul class="submenu account-menu">
-                            {% if request.session.user %}
-                            <li class="account-summary">
-                                <span class="account-label">Đăng nhập bởi</span>
-                                <strong>{{ request.session.display_name|default:request.session.user }}</strong>
-                                <span class="account-role">
-                                    {{ request.session.role_label|default:request.session.role|default:"Người dùng" }}
-                                    · {{ request.session.permission_count|default:"0" }} quyền
-                                </span>
-                            </li>
-                            <li><a href="{% url 'logout' %}">Đăng xuất</a></li>
-                            {% else %}
-                            <li><a href="#" data-open-login="true">Đăng nhập</a></li>
-                            <li><a href="#" data-open-register="true">Đăng ký</a></li>
-                            {% endif %}
-                        </ul>
-                    </li>
-                </ul>
+    <div class="app-shell">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <a href="{% url 'base' %}">THUVIENTCSOFT</a>
             </div>
-        </nav>
-    </header>
 
-    {% if messages %}
-    <div class="flash-messages">
-        {% for message in messages %}
-        <div class="flash-message {{ message.tags }}">{{ message }}</div>
-        {% endfor %}
-    </div>
-    {% endif %}
-
-    <main class="page-main">
-        {% block content %}
-        <section class="hero">
-            <div class="hero-copy">
-                <span class="eyebrow">Bảng điều khiển biên tập cao cấp</span>
-                <h1>Quản lý thư viện theo một phong cách sang trọng, rõ ràng và dễ mở rộng.</h1>
-                <p class="hero-description">
-                    Một giao diện lấy cảm hứng từ thư viện hiện đại: nhiều khoảng thở, bố cục sạch sẽ,
-                    màu sắc có chiều sâu và thao tác được ưu tiên cho vận hành hằng ngày.
-                </p>
-
-                <div class="hero-actions">
-                    {% if request.session.user and request.session.role == 'admin' %}
-                    <a href="{% url 'book_list' %}" class="btn btn-primary">Mở quản trị sách</a>
-                    <a href="{% url 'report' %}" class="btn btn-secondary">Xem báo cáo</a>
-                    {% elif request.session.user and request.session.role == 'user' %}
-                    <a href="{% url 'book_list' %}" class="btn btn-primary">Tra cứu sách</a>
-                    <a href="{% url 'book_list' %}" class="btn btn-secondary">Khám phá đầu sách</a>
-                    {% else %}
-                    <a href="#" class="btn btn-primary" data-open-login="true">Đăng nhập hệ thống</a>
-                    <a href="#" class="btn btn-secondary" data-open-register="true">Tạo tài khoản</a>
-                    {% endif %}
-                </div>
-
-                <div class="hero-pills">
-                    <span>Responsive cho desktop và mobile</span>
-                    <span>UI/UX ưu tiên thao tác nhanh</span>
-                    <span>Cảm hứng từ thư viện boutique</span>
-                </div>
+            <nav class="sidebar-nav">
+                <a href="{% url 'base' %}" class="nav-item">Trang chủ</a>
 
                 {% if request.session.user and request.session.role == 'admin' %}
-                <p class="guest-note">
-                    Bạn đang ở vai trò quản trị viên với 4 quyền chính: sách, mượn trả, độc giả và báo cáo.
-                </p>
+                <a href="{% url 'book_list' %}" class="nav-item">Quản lý sách</a>
+                <a href="{% url 'borrow' %}" class="nav-item">Mượn sách</a>
+                <a href="{% url 'borrower' %}" class="nav-item">Người mượn</a>
+                <a href="{% url 'report' %}" class="nav-item">Báo cáo</a>
                 {% elif request.session.user and request.session.role == 'user' %}
-                <p class="guest-note">
-                    Bạn đang ở vai trò người dùng với 1 quyền chính: tra cứu và xem danh mục sách.
-                </p>
-                {% else %}
-                <p class="guest-note">
-                    Khu vực public chỉ giới thiệu sản phẩm. Đăng nhập để mở các module quản lý theo vai trò của bạn.
-                </p>
+                <a href="{% url 'book_list' %}" class="nav-item">Tra cứu sách</a>
                 {% endif %}
-            </div>
+            </nav>
+        </aside>
 
-            <div class="hero-visual">
-                <article class="feature-panel hero-panel">
-                    <div class="panel-topline">
-                        <span class="panel-kicker">Nhịp thư viện</span>
-                        <span class="panel-chip">Xem nhanh</span>
+        <div class="app-main">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button type="button" class="sidebar-toggle" id="sidebar-toggle">☰</button>
+                    <div>
+                        <h1 class="topbar-title">Hệ thống quản lý thư viện</h1>
+                        <p class="topbar-subtitle">
+                            {% if request.session.user %}
+                            {{ request.session.role_label|default:request.session.role|default:"Người dùng" }} · {{ request.session.permission_count|default:"0" }} quyền
+                            {% else %}
+                            Giao diện quản trị đơn giản, tập trung vào dữ liệu thật
+                            {% endif %}
+                        </p>
                     </div>
-                    <div class="panel-metrics">
-                        <div class="metric-card highlight">
-                            <span class="metric-label">Kho dữ liệu</span>
-                            <strong>1,240</strong>
-                            <span class="metric-note">đầu sách đã được phân loại</span>
-                        </div>
-                        <div class="metric-card">
-                            <span class="metric-label">Lưu thông hôm nay</span>
-                            <strong>182</strong>
-                            <span class="metric-note">phiếu mượn và trả được xử lý</span>
-                        </div>
-                    </div>
-                    <div class="hero-shelves">
-                        <div class="shelf-card">
-                            <span class="shelf-index">01</span>
-                            <div>
-                                <h3>Không gian đọc</h3>
-                                <p>Khu vực tra cứu và khám phá sách mới.</p>
-                            </div>
-                        </div>
-                        <div class="shelf-card">
-                            <span class="shelf-index">02</span>
-                            <div>
-                                <h3>Bàn thành viên</h3>
-                                <p>Theo dõi thành viên, trạng thái mượn và lịch sử tương tác.</p>
-                            </div>
-                        </div>
-                        <div class="shelf-card">
-                            <span class="shelf-index">03</span>
-                            <div>
-                                <h3>Bảng điều hành</h3>
-                                <p>Tổng hợp chỉ số để nhìn ngay nhịp vận hành của thư viện.</p>
-                            </div>
-                        </div>
-                    </div>
-                </article>
-            </div>
-        </section>
+                </div>
 
-        <section class="feature-grid">
-            <article class="feature-panel">
-                <span class="panel-kicker">Ưu tiên danh mục</span>
-                <h2>Bố cục ưu tiên việc đọc và tìm thấy thông tin ngay lập tức.</h2>
-                <p>
-                    Từ ô tìm kiếm, bảng dữ liệu đến các trạng thái đều được thiết kế để phục vụ
-                    thao tác quản lý hằng ngày thay vì chỉ để trình bày.
-                </p>
-            </article>
-            <article class="feature-panel">
-                <span class="panel-kicker">Luồng mượn trả</span>
-                <h2>Mượn trả sách được đặt trong một quy trình rõ, dễ kiểm soát.</h2>
-                <p>
-                    Form, lịch sử và cảnh báo quá hạn nằm trong một hệ thống nhất quán, phù hợp cả
-                    desktop lẫn mobile cho nhân viên di chuyển.
-                </p>
-            </article>
-            <article class="feature-panel">
-                <span class="panel-kicker">Sang trọng tinh tế</span>
-                <h2>Một giao diện mang chất thư viện cao cấp thay vì dashboard đại trà.</h2>
-                <p>
-                    Tông màu ink navy, parchment và brass giúp sản phẩm trông tin cậy, khác biệt
-                    và có cảm giác được xây cho một đơn vị thật.
-                </p>
-            </article>
-        </section>
-        {% endblock %}
-    </main>
+                <div class="topbar-right">
+                    {% if request.session.user %}
+                    <div class="account-box">
+                        <strong>{{ request.session.display_name|default:request.session.user }}</strong>
+                        <span>{{ request.session.role_label|default:request.session.role|default:"Người dùng" }}</span>
+                    </div>
+                    <a href="{% url 'logout' %}" class="topbar-btn danger">Đăng xuất</a>
+                    {% else %}
+                    <a href="#" class="topbar-btn primary" data-open-login="true">Đăng nhập</a>
+                    <a href="#" class="topbar-btn" data-open-register="true">Đăng ký</a>
+                    {% endif %}
+                </div>
+            </header>
+
+            {% if messages %}
+            <div class="flash-messages">
+                {% for message in messages %}
+                <div class="flash-message {{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <main class="content-area">
+                {% block content %}
+                <section class="page-card">
+                    <div class="page-header">
+                        <div>
+                            <h2 class="page-title">Trang chủ</h2>
+                            <p class="page-text">
+                                {% if request.session.user and request.session.role == 'admin' %}
+                                Bạn đang đăng nhập bằng tài khoản quản trị. Có thể truy cập 4 khu vực: sách, mượn sách, người mượn và báo cáo.
+                                {% elif request.session.user and request.session.role == 'user' %}
+                                Bạn đang đăng nhập bằng tài khoản người dùng. Hiện tại chỉ có quyền tra cứu và xem danh mục sách.
+                                {% else %}
+                                Vui lòng đăng nhập để sử dụng chức năng quản lý. Giao diện này đã loại bỏ các thông số giả và chỉ giữ lại nội dung cần thiết.
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    {% if not request.session.user %}
+                    <div class="empty-block">
+                        <h3>Chưa đăng nhập</h3>
+                        <p>Đăng nhập để truy cập đúng chức năng theo vai trò của bạn.</p>
+                        <div class="action-row">
+                            <a href="#" class="topbar-btn primary" data-open-login="true">Đăng nhập</a>
+                            <a href="#" class="topbar-btn" data-open-register="true">Đăng ký</a>
+                        </div>
+                    </div>
+                    {% endif %}
+                </section>
+                {% endblock %}
+            </main>
+        </div>
+    </div>
 
     {% include 'login_modal.html' %}
     {% include 'register_modal.html' %}
@@ -234,43 +111,25 @@
     <script>
         (() => {
             const body = document.body;
-            const navToggle = document.querySelector('.nav-toggle');
-            const navPanel = document.getElementById('site-menu');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebar-toggle');
 
-            if (navToggle && navPanel) {
-                const closeNav = () => {
-                    navToggle.setAttribute('aria-expanded', 'false');
-                    navPanel.classList.remove('is-open');
-                    body.classList.remove('nav-open');
-                };
-
-                navToggle.addEventListener('click', () => {
-                    const expanded = navToggle.getAttribute('aria-expanded') === 'true';
-                    navToggle.setAttribute('aria-expanded', String(!expanded));
-                    navPanel.classList.toggle('is-open', !expanded);
-                    body.classList.toggle('nav-open', !expanded);
-                });
-
-                navPanel.querySelectorAll('a').forEach((link) => {
-                    link.addEventListener('click', () => {
-                        closeNav();
-                    });
+            if (sidebar && sidebarToggle) {
+                sidebarToggle.addEventListener('click', () => {
+                    sidebar.classList.toggle('is-open');
+                    body.classList.toggle('sidebar-open');
                 });
 
                 document.addEventListener('click', (event) => {
-                    const isOpen = navPanel.classList.contains('is-open');
-                    if (!isOpen) {
+                    if (window.innerWidth > 900) {
                         return;
                     }
 
-                    if (!navPanel.contains(event.target) && !navToggle.contains(event.target)) {
-                        closeNav();
-                    }
-                });
-
-                window.addEventListener('resize', () => {
-                    if (window.innerWidth > 860) {
-                        closeNav();
+                    const clickedToggle = sidebarToggle.contains(event.target);
+                    const clickedSidebar = sidebar.contains(event.target);
+                    if (!clickedToggle && !clickedSidebar) {
+                        sidebar.classList.remove('is-open');
+                        body.classList.remove('sidebar-open');
                     }
                 });
             }

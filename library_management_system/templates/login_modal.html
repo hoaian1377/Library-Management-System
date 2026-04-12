@@ -1,19 +1,19 @@
-<!-- Modal Đăng nhập -->
 <div id="login-modal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
             <h2>Đăng nhập</h2>
         </div>
         <div class="modal-body">
+            <p class="modal-note">Nhập tài khoản để truy cập đúng chức năng theo vai trò của bạn.</p>
             <form action="/login/" method="POST">
                 {% csrf_token %}
                 <div class="input-group">
-                    <label for="username" class="input-label">Tên Đăng Nhập</label>
-                    <input type="username" name="username" required>
+                    <label class="input-label" for="login-username">Tên đăng nhập</label>
+                    <input id="login-username" type="text" name="username" required>
                 </div>
                 <div class="input-group">
-                    <label for="password" class="input-label">Mật khẩu</label>
-                    <input type="password" name="password" required>
+                    <label class="input-label" for="login-password">Mật khẩu</label>
+                    <input id="login-password" type="password" name="password" required>
                 </div>
                 <div class="remember-group">
                     <input type="checkbox" id="remember" name="remember_me">

@@ -1,173 +1,20 @@
 {% extends 'base.html' %}
-{% load static %}
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/report.css' %}">
-
-<section class="page-shell">
-    <div class="page-intro">
+<section class="page-card">
+    <div class="page-header">
         <div>
-            <span class="eyebrow">Bảng điều hành</span>
-            <h1 class="page-title">Thống kê và báo cáo</h1>
-            <p class="page-description">
-                Dashboard tổng hợp được trình bày theo tinh thần premium: số liệu nổi bật,
-                phân tích gọn và các bảng cảnh báo để người quản lý nắm tình hình ngay lập tức.
+            <h2 class="page-title">Báo cáo</h2>
+            <p class="page-text">Các số liệu báo cáo thật chưa được nối backend nên đã loại bỏ toàn bộ thống kê mô phỏng.</p>
+        </div>
+    </div>
+
+    <div class="notice-card">
+        <div class="empty-block">
+            <h3>Báo cáo đang chờ dữ liệu</h3>
+            <p>
+                Khi backend thống kê hoàn thiện, khu vực này sẽ hiển thị đúng số lượng sách,
+                sách đang mượn, sách quá hạn và các báo cáo vận hành thực tế.
             </p>
-        </div>
-        <div class="page-stat-row">
-            <div class="page-stat">
-                <strong>Q1</strong>
-                <span>Kỳ báo cáo hiện tại</span>
-            </div>
-            <div class="page-stat">
-                <strong>92%</strong>
-                <span>Độ phủ dữ liệu</span>
-            </div>
-        </div>
-    </div>
-
-    <div class="summary-grid">
-        <article class="summary-card">
-            <span>Tổng số sách</span>
-            <strong>120</strong>
-        </article>
-        <article class="summary-card">
-            <span>Sách đang mượn</span>
-            <strong>35</strong>
-        </article>
-        <article class="summary-card">
-            <span>Sách quá hạn</span>
-            <strong>05</strong>
-        </article>
-        <article class="summary-card">
-            <span>Người mượn</span>
-            <strong>80</strong>
-        </article>
-    </div>
-
-    <div class="split-grid">
-        <article class="chart-card surface-card">
-            <div class="section-header">
-                <div>
-                    <h2 class="section-title">Lưu thông theo tuần</h2>
-                    <p class="section-subtitle">Biểu đồ cột mô phỏng giúp đọc nhanh nhịp vận hành của thư viện.</p>
-                </div>
-                <span class="badge gold">Cập nhật hôm nay</span>
-            </div>
-
-            <div class="chart-bars">
-                <div class="chart-bar">
-                    <div class="chart-bar-fill" style="height: 46%;"></div>
-                    <label>T2</label>
-                </div>
-                <div class="chart-bar">
-                    <div class="chart-bar-fill" style="height: 64%;"></div>
-                    <label>T3</label>
-                </div>
-                <div class="chart-bar">
-                    <div class="chart-bar-fill" style="height: 58%;"></div>
-                    <label>T4</label>
-                </div>
-                <div class="chart-bar">
-                    <div class="chart-bar-fill" style="height: 82%;"></div>
-                    <label>T5</label>
-                </div>
-                <div class="chart-bar">
-                    <div class="chart-bar-fill" style="height: 72%;"></div>
-                    <label>T6</label>
-                </div>
-                <div class="chart-bar">
-                    <div class="chart-bar-fill" style="height: 54%;"></div>
-                    <label>T7</label>
-                </div>
-            </div>
-
-            <div class="chart-legend">
-                <span>Phiếu mượn đã xử lý</span>
-                <span>Xu hướng tăng trong giờ cao điểm</span>
-            </div>
-        </article>
-
-        <aside class="insight-card surface-card">
-            <div class="section-header">
-                <div>
-                    <h2 class="section-title">Điểm nhấn quản trị</h2>
-                    <p class="section-subtitle">Những thông tin nên được ưu tiên khi ra quyết định trong ngày.</p>
-                </div>
-            </div>
-
-            <div class="list-stack">
-                <div class="list-item">
-                    <span class="list-item-index">A</span>
-                    <div>
-                        <h3>Nhóm sách công nghệ đang được mượn nhiều</h3>
-                        <p>Có thể cân nhắc bổ sung thêm đầu sách mới cho khu kệ đang hút độc giả.</p>
-                    </div>
-                </div>
-                <div class="list-item">
-                    <span class="list-item-index">B</span>
-                    <div>
-                        <h3>Tỷ lệ trả đúng hạn đang khá tốt</h3>
-                        <p>Nên tiếp tục duy trì nhắc hạn nhẹ để giảm thêm số phiếu quá hạn.</p>
-                    </div>
-                </div>
-                <div class="list-item">
-                    <span class="list-item-index">C</span>
-                    <div>
-                        <h3>Hệ thống phát hiện 5 phiếu đến hạn</h3>
-                        <p>Ưu tiên liên hệ nhóm độc giả này trong đầu buổi chiều để xử lý sớm.</p>
-                    </div>
-                </div>
-            </div>
-        </aside>
-    </div>
-
-    <div class="table-card surface-card">
-        <div class="section-header">
-            <div>
-                <h2 class="section-title">Danh sách sách quá hạn</h2>
-                <p class="section-subtitle">Bảng cảnh báo đặt cuối dashboard để xử lý ngay sau khi đọc số liệu tổng.</p>
-            </div>
-            <span class="badge danger">Cần theo dõi gấp</span>
-        </div>
-
-        <div class="table-scroll">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Mã sách</th>
-                        <th>Tiêu đề</th>
-                        <th>Người mượn</th>
-                        <th>Ngày mượn</th>
-                        <th>Hạn trả</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><span class="badge gold">001</span></td>
-                        <td>
-                            <div class="cell-title">
-                                <strong>Django Web</strong>
-                                <span>Công nghệ thông tin</span>
-                            </div>
-                        </td>
-                        <td>Nguyễn Văn A</td>
-                        <td>01-03-2026</td>
-                        <td><span class="badge danger">10-03-2026</span></td>
-                    </tr>
-                    <tr>
-                        <td><span class="badge gold">009</span></td>
-                        <td>
-                            <div class="cell-title">
-                                <strong>SQL Server Cơ Bản</strong>
-                                <span>Nền tảng cơ sở dữ liệu</span>
-                            </div>
-                        </td>
-                        <td>Trần Minh Hà</td>
-                        <td>04-03-2026</td>
-                        <td><span class="badge danger">13-03-2026</span></td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
     </div>
 </section>

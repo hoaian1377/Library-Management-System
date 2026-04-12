@@ -1,13 +1,14 @@
-<!-- Modal Đăng ký -->
 <div id="register-modal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
             <h2>Đăng ký</h2>
         </div>
         <div class="modal-body">
+            <p class="modal-note">Tạo tài khoản mới. Tài khoản đăng ký sẽ mặc định ở vai trò người dùng.</p>
             <form action="{% url 'register' %}" method="POST">
                 {% csrf_token %}
                 <div id="register-feedback" class="auth-feedback" style="display: none;"></div>
+
                 <div class="input-group">
                     <label for="reg-fullname" class="input-label">Họ và tên</label>
                     <input type="text" id="reg-fullname" name="full_name" placeholder="Nhập họ và tên" required>
@@ -29,12 +30,12 @@
                     <input type="password" id="reg-password" name="password" placeholder="Nhập mật khẩu" required>
                 </div>
                 <div class="input-group">
-                    <label for="reg-confirm-password" class="input-label">Xác nhận MK</label>
-                    <input type="password" id="reg-confirm-password" name="confirm_password" placeholder="Xác nhận mật khẩu" required>
+                    <label for="reg-confirm-password" class="input-label">Xác nhận mật khẩu</label>
+                    <input type="password" id="reg-confirm-password" name="confirm_password" placeholder="Nhập lại mật khẩu" required>
                 </div>
 
-                <div class="action-group" style="justify-content: center; margin-left: 0;">
-                    <button type="submit" class="btn-login" style="width: 100%;">Đăng ký</button>
+                <div class="action-group">
+                    <button type="submit" class="btn-login">Đăng ký</button>
                 </div>
             </form>
         </div>
@@ -49,19 +50,15 @@
     const showRegisterButtons = document.querySelectorAll('[data-open-register]');
     const switchToLoginBtn = document.getElementById('switch-to-login');
 
-    // Mở modal đăng ký
     showRegisterButtons.forEach((button) => {
         button.addEventListener('click', function (e) {
             e.preventDefault();
-            // Đóng modal login nếu đang mở
             const loginM = document.getElementById('login-modal');
             if (loginM) loginM.style.display = 'none';
-
             registerModal.style.display = 'flex';
         });
     });
 
-    // Chuyển từ Đăng ký sang Đăng nhập
     if (switchToLoginBtn) {
         switchToLoginBtn.addEventListener('click', function (e) {
             e.preventDefault();
@@ -71,7 +68,6 @@
         });
     }
 
-    // Xử lý sự kiện khi submit form Đăng ký
     const registerForm = registerModal.querySelector('form');
     const registerFeedback = document.getElementById('register-feedback');
     if (registerForm) {
@@ -110,7 +106,6 @@
         });
     }
 
-    // Đóng khi click ra ngoài
     window.addEventListener('click', function (e) {
         if (e.target == registerModal) {
             registerModal.style.display = 'none';
