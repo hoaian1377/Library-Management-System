@@ -33,16 +33,16 @@
 
 <script>
     const loginModal = document.getElementById('login-modal');
-    const showLoginBtn = document.getElementById('show-login-btn');
+    const showLoginButtons = document.querySelectorAll('[data-open-login]');
     const switchToRegisterBtn = document.getElementById('switch-to-register');
     const showForgotPasswordBtn = document.getElementById('show-forgot-password');
 
-    if (showLoginBtn) {
-        showLoginBtn.addEventListener('click', function (e) {
+    showLoginButtons.forEach((button) => {
+        button.addEventListener('click', function (e) {
             e.preventDefault();
             loginModal.style.display = 'flex';
         });
-    }
+    });
 
     if (switchToRegisterBtn) {
         switchToRegisterBtn.addEventListener('click', function (e) {

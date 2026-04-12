@@ -46,12 +46,12 @@
 
 <script>
     const registerModal = document.getElementById('register-modal');
-    const showRegisterBtn = document.getElementById('show-register-btn'); // Nút đăng ký ở menu
+    const showRegisterButtons = document.querySelectorAll('[data-open-register]');
     const switchToLoginBtn = document.getElementById('switch-to-login');
 
     // Mở modal đăng ký
-    if (showRegisterBtn) {
-        showRegisterBtn.addEventListener('click', function (e) {
+    showRegisterButtons.forEach((button) => {
+        button.addEventListener('click', function (e) {
             e.preventDefault();
             // Đóng modal login nếu đang mở
             const loginM = document.getElementById('login-modal');
@@ -59,7 +59,7 @@
 
             registerModal.style.display = 'flex';
         });
-    }
+    });
 
     // Chuyển từ Đăng ký sang Đăng nhập
     if (switchToLoginBtn) {

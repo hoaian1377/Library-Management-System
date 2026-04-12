@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 
+from django.core.exceptions import ImproperlyConfigured
+
 try:
     import pyodbc
 except ImportError:  # pragma: no cover - dependency is installed in runtime environments
@@ -39,13 +41,29 @@ def _get_database_options():
         'ODBC Driver 17 for SQL Server',
         'SQL Server Native Client 11.0',
         'SQL Server Native Client 10.0',
-        'SQL Server',
     ]
 
-    driver = explicit_driver or next(
-        (candidate for candidate in preferred_drivers if candidate in available_drivers),
-        'ODBC Driver 18 for SQL Server',
-    )
+    unsupported_drivers = {'SQL Server'}
+
+    if explicit_driver in unsupported_drivers:
+        raise ImproperlyConfigured(
+            "DB_DRIVER='SQL Server' is not supported by mssql-django for this project. "
+            "Install ODBC Driver 18 or 17 for SQL Server, then set DB_DRIVER accordingly."
+        )
+
+    if explicit_driver:
+        driver = explicit_driver
+    else:
+        driver = next(
+            (candidate for candidate in preferred_drivers if candidate in available_drivers),
+            None,
+        )
+
+    if driver is None:
+        raise ImproperlyConfigured(
+            "No supported SQL Server ODBC driver was found. Install 'ODBC Driver 18 for SQL Server' "
+            "or 'ODBC Driver 17 for SQL Server', or run the app via Docker where the driver is bundled."
+        )
 
     extra_params = _get_env('DB_EXTRA_PARAMS')
     if extra_params is None and driver.startswith('ODBC Driver '):
@@ -54,11 +72,6 @@ def _get_database_options():
     options = {
         'driver': driver,
     }
-
-    # The legacy Windows "SQL Server" driver requires SERVER instead of
-    # SERVERNAME, otherwise mssql-django builds an invalid connection string.
-    if driver == 'SQL Server':
-        options['host_is_server'] = True
 
     if extra_params:
         options['extra_params'] = extra_params
@@ -69,10 +82,6 @@ def _get_database_options():
 DATABASE_OPTIONS = _get_database_options()
 DATABASE_HOST = _get_env('DB_HOST', '127.0.0.1')
 DATABASE_PORT = _get_env('DB_PORT', '1433')
-
-if DATABASE_OPTIONS['driver'] == 'SQL Server' and DATABASE_PORT:
-    DATABASE_HOST = f'{DATABASE_HOST},{DATABASE_PORT}'
-    DATABASE_PORT = ''
 
 # Build paths inside the project
 BASE_DIR = Path(__file__).resolve().parent.parent

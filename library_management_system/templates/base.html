@@ -21,7 +21,7 @@
                 <a href="{% url 'base' %}">Library</a>
             </div>
             <ul class="menu">
-
+                {% if request.session.user %}
                 <li class="dropdown">
                     <a href="#">sách</a>
                     <ul class="submenu">
@@ -31,7 +31,7 @@
                         <li><a href="#">Cập nhật sách</a></li>
                         <li><a href="#">Xóa sách</a></li>
                     </ul>
-
+ 
                 </li>
 
                 <li class="dropdown">
@@ -57,9 +57,10 @@
                         <li><a href="{% url 'report' %}">Sách đang mượn</a></li>
                         <li><a href="{% url 'report' %}">Sách quá hạn</a></li>
                     </ul>
-
+ 
                 </li>
-
+                {% endif %}
+ 
                 <li class="dropdown">
                     <a href="#">Tài Khoản</a>
                   <ul class="submenu">
@@ -68,12 +69,12 @@
                             <li>Vai trò: {{ request.session.role|default:"user" }}</li>
                             <li><a href="{% url 'logout' %}">Đăng xuất</a></li>
                         {% else %}
-                            <li><a href="{% url 'login_modal' %}" id="show-login-btn">Đăng nhập</a></li>
-                            <li><a href="#" id="show-register-btn">Đăng ký</a></li>
+                            <li><a href="{% url 'login_modal' %}" data-open-login="true">Đăng nhập</a></li>
+                            <li><a href="#" data-open-register="true">Đăng ký</a></li>
                         {% endif %}
                     </ul> 
                 </li>
-
+ 
             </ul>
 
         </nav>
@@ -101,13 +102,26 @@
             </p>
 
             <div class="buttons">
-
-                <button class="btn btn-search">Tìm sách</button>
-
-                <button class="btn btn-contact">Liên hệ</button>
-
+                {% if request.session.user %}
+                <a href="{% url 'book_list' %}">
+                    <button type="button" class="btn btn-search">Quản lý sách</button>
+                </a>
+                <a href="{% url 'report' %}">
+                    <button type="button" class="btn btn-contact">Báo cáo</button>
+                </a>
+                {% else %}
+                <button type="button" class="btn btn-search" data-open-login="true">Đăng nhập</button>
+                <button type="button" class="btn btn-contact" data-open-register="true">Đăng ký</button>
+                {% endif %}
+ 
             </div>
 
+            {% if not request.session.user %}
+            <p class="guest-note">
+                Đăng nhập để sử dụng các chức năng quản lý sách, mượn trả và báo cáo.
+            </p>
+            {% endif %}
+ 
         </div>
 
 
