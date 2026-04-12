@@ -43,7 +43,7 @@ body {
 }
 
 body.nav-open {
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 a {
@@ -197,6 +197,8 @@ select {
 
 .dropdown {
     position: relative;
+    padding-bottom: 10px;
+    margin-bottom: -10px;
 }
 
 .menu-link {
@@ -220,9 +222,9 @@ select {
 
 .submenu {
     position: absolute;
-    top: calc(100% + 12px);
+    top: calc(100% - 2px);
     left: 50%;
-    transform: translate(-50%, 10px);
+    transform: translate(-50%, 6px);
     min-width: 210px;
     padding: 10px;
     margin: 0;
@@ -233,7 +235,17 @@ select {
     box-shadow: var(--shadow);
     opacity: 0;
     visibility: hidden;
+    pointer-events: none;
     transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+.submenu::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -14px;
+    height: 14px;
 }
 
 .submenu li + li {
@@ -282,6 +294,14 @@ select {
 .dropdown:hover .submenu {
     opacity: 1;
     visibility: visible;
+    pointer-events: auto;
+    transform: translate(-50%, 0);
+}
+
+.dropdown:focus-within .submenu {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
     transform: translate(-50%, 0);
 }
 
@@ -973,12 +993,15 @@ select {
         top: 92px;
         left: 12px;
         right: 12px;
+        max-height: calc(100vh - 108px);
+        overflow-y: auto;
         padding: 14px;
         border-radius: 26px;
         background: rgba(7, 14, 25, 0.96);
         border: 1px solid var(--line);
         backdrop-filter: blur(22px);
         box-shadow: var(--shadow);
+        overscroll-behavior: contain;
         opacity: 0;
         visibility: hidden;
         transform: translateY(-10px);
@@ -999,6 +1022,8 @@ select {
 
     .dropdown {
         width: 100%;
+        padding-bottom: 0;
+        margin-bottom: 0;
     }
 
     .menu-link {
@@ -1016,9 +1041,14 @@ select {
         transform: none;
         opacity: 1;
         visibility: visible;
+        pointer-events: auto;
         box-shadow: none;
         background: transparent;
         border: 0;
+    }
+
+    .submenu::before {
+        display: none;
     }
 
     .submenu li + li {

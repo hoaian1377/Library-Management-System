@@ -7,10 +7,20 @@ from django.contrib.auth.hashers import check_password, make_password
 from django.db import transaction
 from django.db.models import Max
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse
 
-from .models import Nhanvien, Taikhoan, Sach
+from .models import Nhanvien, Sach, Taikhoan
+
+ROLE_LABELS = {
+    'admin': 'Quản trị viên',
+    'user': 'Người dùng',
+}
+
+ROLE_PERMISSIONS = {
+    'admin': {'books', 'borrows', 'borrowers', 'reports'},
+    'user': {'books'},
+}
 
 
 def _build_url(route_name, **params):
@@ -23,6 +33,19 @@ def _build_url(route_name, **params):
 
 def _is_ajax(request):
     return request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+
+
+def _normalize_role(role):
+    normalized = (role or 'user').strip().lower()
+    return normalized if normalized in ROLE_PERMISSIONS else 'user'
+
+
+def _get_role_label(role):
+    return ROLE_LABELS.get(_normalize_role(role), 'Người dùng')
+
+
+def _get_permissions(role):
+    return ROLE_PERMISSIONS.get(_normalize_role(role), ROLE_PERMISSIONS['user'])
 
 
 def _json_or_redirect(request, ok, message, *, redirect_to='base', modal=None, status=200, extra=None):
@@ -49,6 +72,26 @@ def _require_session_auth(view_func):
         return redirect(_build_url('base', auth='login'))
 
     return wrapped
+
+
+def _require_permission(permission):
+    def decorator(view_func):
+        @wraps(view_func)
+        @_require_session_auth
+        def wrapped(request, *args, **kwargs):
+            role = _normalize_role(request.session.get('role'))
+            if permission in _get_permissions(role):
+                return view_func(request, *args, **kwargs)
+
+            messages.error(
+                request,
+                f"Vai trò {_get_role_label(role).lower()} không có quyền truy cập khu vực này."
+            )
+            return redirect('base')
+
+        return wrapped
+
+    return decorator
 
 
 def _generate_employee_code():
@@ -78,10 +121,13 @@ def _account_matches_password(account, raw_password):
 
 
 def _store_session_user(request, account, remember_me=False):
+    role = _normalize_role(account.vaitro)
     request.session.cycle_key()
     request.session['user'] = account.username
     request.session['display_name'] = account.nhanvienid.hoten
-    request.session['role'] = account.vaitro
+    request.session['role'] = role
+    request.session['role_label'] = _get_role_label(role)
+    request.session['permission_count'] = len(_get_permissions(role))
     request.session['user_id'] = account.taikhoanid
 
     if remember_me:
@@ -98,24 +144,23 @@ def _get_account_by_email(email):
     )
 
 
-# Create your views here.
 def base(request):
-    return render(request,'base.html')
+    return render(request, 'base.html')
 
 
-@_require_session_auth
+@_require_permission('borrows')
 def borrow(request):
-    return render(request,'borrow.html')
+    return render(request, 'borrow.html')
 
 
-@_require_session_auth
+@_require_permission('borrowers')
 def borrower(request):
-    return render(request,'borrower.html')
+    return render(request, 'borrower.html')
 
 
-@_require_session_auth
+@_require_permission('reports')
 def report(request):
-    return render(request,'report.html')
+    return render(request, 'report.html')
 
 
 def login_view(request):
@@ -132,7 +177,7 @@ def login_view(request):
         messages.success(request, f"Chào mừng {user.nhanvienid.hoten} quay lại.")
         return redirect('base')
 
-    messages.error(request, "Sai tài khoản hoặc mật khẩu")
+    messages.error(request, "Sai tài khoản hoặc mật khẩu.")
     return redirect(_build_url('base', auth='login'))
 
 
@@ -198,7 +243,7 @@ def register_view(request):
             hoten=full_name,
             email=email,
             sdt=phone,
-            chucvu="Thanh vien",
+            chucvu="Thành viên",
             ngayvaolam=date.today(),
         )
         Taikhoan.objects.create(
@@ -305,13 +350,10 @@ def logout_view(request):
     return redirect('base')
 
 
-######################### Sach #######################
-
-@_require_session_auth
+@_require_permission('books')
 def book_list(request):
     books = Sach.objects.select_related('tacgiaid').all()
 
-    # SEARCH
     keyword = request.GET.get('q')
     if keyword:
         books = books.filter(tensach__icontains=keyword)

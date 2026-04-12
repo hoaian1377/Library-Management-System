@@ -6,21 +6,21 @@
 <section class="page-shell">
     <div class="page-intro">
         <div>
-            <span class="eyebrow">Catalog atelier</span>
-            <h1 class="page-title">Bo suu tap sach</h1>
+            <span class="eyebrow">Xưởng danh mục</span>
+            <h1 class="page-title">Bộ sưu tập sách</h1>
             <p class="page-description">
-                Theo doi cac tua sach hien co, tim nhanh theo ten va giu cho kho du lieu luon de doc,
-                de thao tac trong ca desktop lan mobile.
+                Theo dõi các đầu sách hiện có, tìm nhanh theo tên và giữ cho kho dữ liệu luôn dễ đọc,
+                dễ thao tác trên cả desktop lẫn mobile.
             </p>
         </div>
         <div class="page-stat-row">
             <div class="page-stat">
                 <strong>{{ books|length }}</strong>
-                <span>Sach dang hien thi</span>
+                <span>Sách đang hiển thị</span>
             </div>
             <div class="page-stat">
-                <strong>{{ request.GET.q|default:"All" }}</strong>
-                <span>Trang thai tim kiem</span>
+                <strong>{{ request.GET.q|default:"Tất cả" }}</strong>
+                <span>Trạng thái tìm kiếm</span>
             </div>
         </div>
     </div>
@@ -28,20 +28,20 @@
     <div class="toolbar-card surface-card catalog-toolbar">
         <div class="section-header">
             <div>
-                <h2 class="section-title">Tim kiem va dieu huong</h2>
-                <p class="section-subtitle">Mot khu vuc thao tac gon gang cho nhan vien thu vien.</p>
+                <h2 class="section-title">Tìm kiếm và điều hướng</h2>
+                <p class="section-subtitle">Một khu vực thao tác gọn gàng cho nhân viên thư viện.</p>
             </div>
         </div>
 
         <div class="catalog-toolbar-row">
             <form method="GET" class="search-form">
-                <input class="control" type="text" name="q" placeholder="Tim ten sach, tac gia hoac chu de..." value="{{ request.GET.q }}">
-                <button type="submit" class="btn btn-primary btn-inline">Tim sach</button>
+                <input class="control" type="text" name="q" placeholder="Tìm tên sách, tác giả hoặc chủ đề..." value="{{ request.GET.q }}">
+                <button type="submit" class="btn btn-primary btn-inline">Tìm sách</button>
             </form>
 
             <div class="toolbar-actions">
-                <button type="button" class="btn btn-secondary btn-inline">Them dau sach</button>
-                <button type="button" class="btn-ghost btn-inline">Xuat danh muc</button>
+                <button type="button" class="btn btn-secondary btn-inline">Thêm đầu sách</button>
+                <button type="button" class="btn-ghost btn-inline">Xuất danh mục</button>
             </div>
         </div>
     </div>
@@ -49,21 +49,21 @@
     <div class="table-card surface-card">
         <div class="section-header">
             <div>
-                <h2 class="section-title">Danh muc hien tai</h2>
-                <p class="section-subtitle">Bieu dien du lieu theo phong cach sach se, uu tien kha nang quet nhanh.</p>
+                <h2 class="section-title">Danh mục hiện tại</h2>
+                <p class="section-subtitle">Biểu diễn dữ liệu theo phong cách sạch sẽ, ưu tiên khả năng quét nhanh.</p>
             </div>
-            <span class="badge gold">Live catalog</span>
+            <span class="badge gold">Danh mục trực tiếp</span>
         </div>
 
         <div class="table-scroll">
             <table class="data-table">
                 <thead>
                     <tr>
-                        <th>Ma sach</th>
-                        <th>Tieu de</th>
-                        <th>Tac gia</th>
+                        <th>Mã sách</th>
+                        <th>Tiêu đề</th>
+                        <th>Tác giả</th>
                         <th>Nam XB</th>
-                        <th>So luong</th>
+                        <th>Số lượng</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -73,18 +73,18 @@
                         <td>
                             <div class="cell-title">
                                 <strong>{{ book.tensach }}</strong>
-                                <span>{{ book.nhaxuatban|default:"Kho sach noi bo" }}</span>
+                                <span>{{ book.nhaxuatban|default:"Kho sách nội bộ" }}</span>
                             </div>
                         </td>
                         <td>{{ book.tacgiaid.tentacgia }}</td>
                         <td>{{ book.namxuatban }}</td>
                         <td>
                             {% if book.soluong > 5 %}
-                            <span class="badge success">{{ book.soluong }} ban</span>
+                            <span class="badge success">{{ book.soluong }} bản</span>
                             {% elif book.soluong > 0 %}
-                            <span class="badge warn">{{ book.soluong }} ban</span>
+                            <span class="badge warn">{{ book.soluong }} bản</span>
                             {% else %}
-                            <span class="badge danger">Het sach</span>
+                            <span class="badge danger">Hết sách</span>
                             {% endif %}
                         </td>
                     </tr>
@@ -92,7 +92,7 @@
                     <tr>
                         <td colspan="5">
                             <div class="empty-state">
-                                Chua co du lieu sach trong danh muc hien tai.
+                                Chưa có dữ liệu sách trong danh mục hiện tại.
                             </div>
                         </td>
                     </tr>
