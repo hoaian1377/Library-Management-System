@@ -1,16 +1,14 @@
 from datetime import date
 from functools import wraps
 from urllib.parse import urlencode
-
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password, make_password
-from django.db import transaction
+from django.db import transaction, connection
 from django.db.models import Max
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
-
-from .models import Nhanvien, Sach, Taikhoan
+from .models import Nhanvien, Sach, Taikhoan, Tacgia, Theloai
 
 ROLE_LABELS = {
     'admin': 'Quản trị viên',
@@ -378,7 +376,40 @@ def book_list(request):
     if keyword:
         books = books.filter(tensach__icontains=keyword)
 
+    tacgia=Tacgia.objects.all() 
+    theloai=Theloai.objects.all()
     return render(request, 'book.html', {
         'books': books,
         'keyword': keyword,
     })
+
+def book_add(request):
+    if request.method== "POST":
+        tensach= request.POST.get("tensach")
+        tentheloai= request.POST.get('tentheloai')
+        tentacgia=request.POST.get("tentacgia")
+        soluong=request.POST.get("soluong")
+        namxuatban = request.POST.get("namxuatban")
+        nhaxuatban = request.POST.get("nhaxuatban")
+        try:
+            tacgia = Tacgia.objects.filter(tentacgia=tentacgia).first()
+            if not tacgia:
+                tacgia = Tacgia.objects.create(tentacgia=tentacgia)
+
+            # 🔥 tìm hoặc tạo thể loại
+            theloai = Theloai.objects.filter(tentheloai=tentheloai).first()
+            if not theloai:
+                theloai = Theloai.objects.create(tentheloai=tentheloai)
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                        EXEC SP_THEMSACH %s, %s, %s, %s, %s, %s
+                            """,[tensach, namxuatban, nhaxuatban, soluong, theloai.theloaiid, tacgia.tacgiaid,])
+                row = cursor.fetchone()
+                sach_id=row[0] if row else None
+            messages.success(request, f"Thêm sách thành công! ID = {sach_id}")
+            return redirect('book_list')
+
+        except Exception as e:
+            print("ERROR:", e)
+            messages.error(request, f"Lỗi: {str(e)}")
+    return redirect('book_list')

@@ -127,7 +127,8 @@
                     Đang ở chế độ <strong>thêm sách mới</strong>.
                 </div>
 
-                <form class="form-grid" action="#" method="post" onsubmit="return false;">
+                <form class="form-grid" action="{% url 'book_add' %}" method="post" ">
+                    {% csrf_token %}
                     <input type="hidden" id="selected-book-id">
                     <div class="field-block">
                         <label for="book-code">Mã sách</label>
@@ -135,30 +136,36 @@
                     </div>
                     <div class="field-block">
                         <label for="book-title">Tên sách</label>
-                        <input class="surface-input" id="book-title" type="text" placeholder="Nhập tên sách">
+                        <input class="surface-input" id="book-title" name="tensach" type="text" placeholder="Nhập tên sách">
                     </div>
                     <div class="field-block">
                         <label for="book-author">Tác giả</label>
-                        <input class="surface-input" id="book-author" type="text" placeholder="Nhập tác giả">
+                        <input class="surface-input" id="book-author" name="tentacgia" type="text" placeholder="Nhập tác giả">
                     </div>
                     <div class="field-block">
                         <label for="book-category">Thể loại</label>
-                        <input class="surface-input" id="book-category" type="text" placeholder="Nhập thể loại">
+                        <input class="surface-input" id="book-category" name="tentheloai"  type="text" placeholder="Nhập thể loại">
                     </div>
                     <div class="field-block">
                         <label for="book-year">Năm xuất bản</label>
-                        <input class="surface-input" id="book-year" type="number" placeholder="2026">
+                        <input class="surface-input" id="book-year" name="namxuatban" type="number" placeholder="2026">
                     </div>
+
                     <div class="field-block">
                         <label for="book-quantity">Số lượng</label>
-                        <input class="surface-input" id="book-quantity" type="number" placeholder="0">
+                        <input class="surface-input" id="book-quantity"  name="soluong"type="number" placeholder="0">
+                    </div>
+
+                    <div class="field-block">
+                        <label for="book-quantity">Nhà xuất bản</label>
+                        <input class="surface-input" id="book-quantity"  name="nhaxuatban"type="text" placeholder="Nhà xuất bản">
                     </div>
                     <div class="field-block full">
                         <label for="book-note">Ghi chú thông tin sách</label>
                         <textarea class="surface-textarea" id="book-note" placeholder="Ghi chú tình trạng, vị trí kệ hoặc mô tả ngắn..."></textarea>
                     </div>
                     <div class="action-row full">
-                        <button type="button" class="simple-btn primary">Thêm sách</button>
+                        <button type="submit" class="simple-btn primary">Thêm sách</button>
                         <button type="button" class="simple-btn">Cập nhật sách</button>
                         <button type="button" class="simple-btn danger-outline">Xoá sách</button>
                     </div>
