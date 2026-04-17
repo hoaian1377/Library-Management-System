@@ -1,5 +1,36 @@
 {% extends 'base.html' %}
 {% block content %}
+<style>
+.simple-btn {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid #cbd5e1;
+    background-color: #f1f5f9;
+    color: #0f172a;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.simple-btn:hover {
+    background-color: #bbf7d0;
+    color: #166534;
+    border-color: #86efac;
+}
+
+.simple-btn:active {
+    transform: scale(0.95);
+}
+
+.data-table tbody tr {
+    transition: all 0.2s ease;
+}
+
+.data-table tbody tr:hover {
+    background-color: #d1fae5;   /* xanh nhẹ */
+    color: #065f46;
+    cursor: pointer;
+}
+</style>
 <section class="page-grid">
     <article class="page-card">
         <div class="page-header">
@@ -23,27 +54,34 @@
                     </div>
                 </div>
 
-                <form class="form-grid" action="#" method="post" onsubmit="return false;">
+                <form class="form-grid" method="post">
+                    {% csrf_token %}
+
                     <div class="field-block">
-                        <label for="borrower-code">Mã người mượn</label>
-                        <input class="surface-input" id="borrower-code" type="text" placeholder="VD: SV001">
+                        <label for="borrower-code">Mã số sinh viên</label>
+                        <input name="mssv" class="surface-input" id="borrower-code" type="text" placeholder="VD: SV001">
                     </div>
+
                     <div class="field-block">
                         <label for="borrower-name">Họ và tên</label>
-                        <input class="surface-input" id="borrower-name" type="text" placeholder="Nhập họ tên">
+                        <input name="hoten" class="surface-input" id="borrower-name" type="text" placeholder="Nhập họ tên">
                     </div>
+
                     <div class="field-block">
                         <label for="borrower-email">Email</label>
-                        <input class="surface-input" id="borrower-email" type="email" placeholder="email@truong.edu.vn">
+                        <input name="email" class="surface-input" id="borrower-email" type="email" placeholder="email@truong.edu.vn">
                     </div>
+
                     <div class="field-block">
                         <label for="borrower-phone">Số điện thoại</label>
-                        <input class="surface-input" id="borrower-phone" type="text" placeholder="Nhập số điện thoại">
+                        <input name="sdt" class="surface-input" id="borrower-phone" type="text" placeholder="Nhập số điện thoại">
                     </div>
+
                     <div class="field-block">
                         <label for="borrower-class">Lớp / Khoa</label>
-                        <input class="surface-input" id="borrower-class" type="text" placeholder="VD: CNTT K23">
+                        <input name="lophoc" class="surface-input" id="borrower-class" type="text" placeholder="VD: CNTT K23">
                     </div>
+
                     <div class="field-block">
                         <label for="borrower-status">Trạng thái</label>
                         <select class="surface-select" id="borrower-status">
@@ -51,14 +89,16 @@
                             <option>Tạm khóa</option>
                         </select>
                     </div>
+
                     <div class="field-block full">
                         <label for="borrower-note">Ghi chú hồ sơ</label>
-                        <textarea class="surface-textarea" id="borrower-note" placeholder="Ghi chú liên hệ, lịch sử vi phạm hoặc lưu ý đặc biệt..."></textarea>
+                        <textarea class="surface-textarea" id="borrower-note"></textarea>
                     </div>
+
                     <div class="action-row full">
-                        <button type="button" class="simple-btn primary">Thêm người mượn</button>
-                        <button type="button" class="simple-btn">Cập nhật hồ sơ</button>
-                        <button type="button" class="simple-btn danger-outline">Xoá hồ sơ</button>
+                        <button type="submit" name="action" value="add" class="simple-btn primary">Thêm người mượn</button>
+                        <button type="submit" name="action" value="update" class="simple-btn">Cập nhật hồ sơ</button>
+                        <button type="submit" name="action" value="delete" class="simple-btn danger-outline">Xoá hồ sơ</button>
                     </div>
                 </form>
             </article>
@@ -71,8 +111,13 @@
                     </div>
                 </div>
 
-                <div class="toolbar-row">
-                    <input class="control" type="text" placeholder="Tìm theo mã, tên, email hoặc lớp">
+               <div class="toolbar-row">
+                    <form method="get" style="display:flex; gap:10px; width:100%;">
+                        <input name="keyword" value="{{ keyword }}" class="control" type="text"
+                            placeholder="Tìm theo mã, tên, email hoặc lớp">
+                        <button class="simple-btn">Tìm</button>
+                    </form>
+
                     <select class="surface-select slim">
                         <option>Tất cả trạng thái</option>
                         <option>Đang hoạt động</option>
@@ -91,12 +136,43 @@
                                     <th>Điện thoại</th>
                                     <th>Lớp / Khoa</th>
                                     <th>Trạng thái</th>
+                                    <th>Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td colspan="6">Chưa có dữ liệu người mượn từ backend.</td>
+                                {% for sv in sinhviens %}
+                                <tr onclick="selectRow(this)"
+                                    data-mssv="{{ sv.mssv }}"
+                                    data-hoten="{{ sv.hoten }}"
+                                    data-email="{{ sv.email }}"
+                                    data-sdt="{{ sv.sdt }}"
+                                    data-lophoc="{{ sv.lophoc }}"
+                                    style="cursor:pointer;">
+
+                                    <td>{{ sv.mssv }}</td>
+                                    <td>{{ sv.hoten }}</td>
+                                    <td>{{ sv.email }}</td>
+                                    <td>{{ sv.sdt }}</td>
+                                    <td>{{ sv.lophoc }}</td>
+                                    <td>Đang hoạt động</td>
+                                    <td>
+                                        <!-- 🔥 NÚT CHỌN -->
+                                        <button type="button" class="simple-btn"
+                                            onclick="selectSV(this)"
+                                            data-mssv="{{ sv.mssv }}"
+                                            data-hoten="{{ sv.hoten }}"
+                                            data-email="{{ sv.email }}"
+                                            data-sdt="{{ sv.sdt }}"
+                                            data-lophoc="{{ sv.lophoc }}">
+                                            Chọn
+                                        </button>
+                                    </td>
                                 </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="7">Chưa có dữ liệu người mượn từ backend.</td>
+                                </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -131,4 +207,26 @@
         </div>
     </div>
 </section>
+<script>
+function selectSV(btn){
+    // đổ dữ liệu
+    document.getElementById('borrower-code').value = btn.dataset.mssv;
+    document.getElementById('borrower-name').value = btn.dataset.hoten;
+    document.getElementById('borrower-email').value = btn.dataset.email;
+    document.getElementById('borrower-phone').value = btn.dataset.sdt;
+    document.getElementById('borrower-class').value = btn.dataset.lophoc;
+
+    document.querySelectorAll('.selected-row').forEach(r => r.classList.remove('selected-row'));
+    btn.closest('tr').classList.add('selected-row');
+
+
+    document.querySelector('.form-grid').scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+    });
+
+    // 🔥 focus vào ô đầu tiên
+    document.getElementById('borrower-code').focus();
+}
+</script>
 {% endblock %}

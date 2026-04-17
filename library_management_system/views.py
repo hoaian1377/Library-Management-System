@@ -4,12 +4,12 @@ from urllib.parse import urlencode
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password, make_password
 from django.db import transaction, connection
-from django.db.models import Max
+from django.db.models import Max, Q
 from django.http import JsonResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
 from django.views.decorators.http import require_POST
-from .models import Nhanvien, Sach, Taikhoan, Tacgia, Theloai
+from .models import Nhanvien, Sach, Taikhoan, Tacgia, Theloai, Sinhvien
 
 ROLE_LABELS = {
     'admin': 'Quản trị viên',
@@ -600,3 +600,81 @@ def borrow_detail(request, phieu_id):
         ]
 
     return JsonResponse({"data": data})
+
+
+
+
+
+def borrower_add(request):
+    if request.method == "POST":
+        try:
+            mssv = request.POST.get("mssv")
+            hoten = request.POST.get("hoten")
+            email = request.POST.get("email")
+            sdt = request.POST.get("sdt")
+            lop = request.POST.get("lop")
+
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                    INSERT INTO SINHVIEN (MSSV, HOTEN, EMAIL, SDT, LOP, TRANGTHAI)
+                    VALUES (%s, %s, %s, %s, %s, 1)
+                """, [mssv, hoten, email, sdt, lop])
+
+            messages.success(request, "Thêm sinh viên thành công")
+
+        except Exception as e:
+            messages.error(request, f"Lỗi: {str(e)}")
+
+    return redirect('borrower')
+
+def borrower(request):
+    keyword = request.GET.get('keyword', '')
+
+    # 🔍 Tìm kiếm
+    sinhviens = Sinhvien.objects.all()
+    if keyword:
+        sinhviens = sinhviens.filter(
+            Q(mssv__icontains=keyword) |
+            Q(hoten__icontains=keyword) |
+            Q(email__icontains=keyword) |
+            Q(lophoc__icontains=keyword)
+        )
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+
+        mssv = request.POST.get('mssv')
+        hoten = request.POST.get('hoten')
+        email = request.POST.get('email')
+        sdt = request.POST.get('sdt')
+        lophoc = request.POST.get('lophoc')
+
+        if action == 'add':
+            Sinhvien.objects.create(
+                mssv=mssv,
+                hoten=hoten,
+                email=email,
+                sdt=sdt,
+                lophoc=lophoc
+            )
+
+        elif action == 'update':
+            sv = get_object_or_404(Sinhvien, mssv=mssv)
+            sv.hoten = hoten
+            sv.email = email
+            sv.sdt = sdt
+            sv.lophoc = lophoc
+            sv.save()
+
+        elif action == 'delete':
+            sv = get_object_or_404(Sinhvien, mssv=mssv)
+            sv.delete()
+
+        return redirect('borrower')  # tên url
+
+    context = {
+        'sinhviens': sinhviens,
+        'keyword': keyword
+    }
+
+    return render(request, 'borrower.html', context)
