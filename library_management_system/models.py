@@ -33,6 +33,28 @@ class Nhanvien(models.Model):
         db_table = 'NHANVIEN'
 
 
+class Phieumuon(models.Model):
+    phieumuonid = models.AutoField(db_column='PHIEUMUONID', primary_key=True)  # Field name made lowercase.
+    sinhvienid = models.ForeignKey('Sinhvien', models.DO_NOTHING, db_column='SINHVIENID')  # Field name made lowercase.
+    nhanvienid = models.ForeignKey(Nhanvien, models.DO_NOTHING, db_column='NHANVIENID')  # Field name made lowercase.
+    ngaymuon = models.DateTimeField(db_column='NGAYMUON', blank=True, null=True)  # Field name made lowercase.
+    ngaytra = models.DateField(db_column='NGAYTRA', blank=True, null=True)  # Field name made lowercase.
+    trangthai = models.CharField(db_column='TRANGTHAI', max_length=50, db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'PHIEUMUON'
+
+class CtPhieumuon(models.Model):
+    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    phieumuonid = models.ForeignKey('Phieumuon', models.DO_NOTHING, db_column='PHIEUMUONID', blank=True, null=True)  # Field name made lowercase.
+    sachid = models.ForeignKey('Sach', models.DO_NOTHING, db_column='SACHID', blank=True, null=True)  # Field name made lowercase.
+    soluong = models.IntegerField(db_column='SOLUONG', blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'CT_PHIEUMUON'
+
 class Sach(models.Model):
     sachid = models.AutoField(db_column='SACHID', primary_key=True)  # Field name made lowercase.
     tensach = models.CharField(db_column='TENSACH', max_length=255, db_collation='SQL_Latin1_General_CP1_CI_AS')  # Field name made lowercase.

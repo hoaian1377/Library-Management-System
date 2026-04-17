@@ -8,6 +8,7 @@ from django.db.models import Max
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.views.decorators.http import require_POST
 from .models import Nhanvien, Sach, Taikhoan, Tacgia, Theloai
 
 ROLE_LABELS = {
@@ -413,3 +414,189 @@ def book_add(request):
             print("ERROR:", e)
             messages.error(request, f"Lỗi: {str(e)}")
     return redirect('book_list')
+
+def book_delete(request):
+    if request.method == 'POST':
+        sachid = request.POST.get('sachid')
+
+        with connection.cursor() as cursor:
+            cursor.execute("EXEC SP_XOASACH @SACHID=%s", [sachid])
+
+    return redirect('book_list')
+
+def book_update(request):
+    if request.method == "POST":
+        sachid = request.POST.get("sachid")
+        tensach = request.POST.get("tensach")
+        namxuatban = request.POST.get("namxuatban")
+        nhaxuatban = request.POST.get("nhaxuatban")
+        soluong = request.POST.get("soluong")
+
+        if not sachid:
+            return redirect('book_list')
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "EXEC SP_CAPNHATSACH %s, %s, %s, %s, %s",
+                [sachid, tensach, namxuatban, nhaxuatban, soluong]
+            )
+
+        return redirect('book_list')
+    
+    
+@_require_permission('borrows')
+def borrows(request):
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT 
+                pm.PHIEUMUONID,
+                sv.HOTEN,
+                pm.NGAYMUON,
+                pm.NGAYTRA,
+                pm.TRANGTHAI
+            FROM PHIEUMUON pm
+            JOIN SINHVIEN sv ON pm.SINHVIENID = sv.SINHVIENID
+            ORDER BY pm.PHIEUMUONID DESC
+        """)
+
+        borrows = [
+            {
+                "id": row[0],
+                "hoten": row[1],
+                "ngaymuon": row[2],
+                "ngaytra": row[3],
+                "trangthai": row[4],
+                "tensach": "Nhiều sách"   # 👈 fix luôn chỗ này
+            }
+            for row in cursor.fetchall()
+        ]
+
+    # load books cho form (giữ nguyên)
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT SACHID, TENSACH FROM SACH")
+        books = [{"sachid": r[0], "tensach": r[1]} for r in cursor.fetchall()]
+
+    return render(request, "borrow.html", {
+        "books": books,
+        "borrows": borrows
+    })
+
+def borrow_books(request):
+    if request.method == 'POST':
+        try:
+            mssv = request.POST.get('mssv', '').strip()
+            ngaytra = request.POST.get('ngaytra')
+            username = request.session.get('user')
+
+            if not username:
+                raise Exception("Chưa đăng nhập")
+
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                    SELECT NHANVIENID 
+                    FROM TAIKHOAN 
+                    WHERE USERNAME = %s
+                """, [username])
+
+                row = cursor.fetchone()
+
+                if not row:
+                    raise Exception("Không tìm thấy nhân viên")
+
+                nhanvien_id = row[0]
+
+            if not mssv:
+                raise Exception("Vui lòng nhập MSSV")
+
+            sach_ids = request.POST.getlist('sach_id[]')
+            soluongs = request.POST.getlist('soluong[]')
+
+            if not sach_ids or not any(sach_ids):
+                raise Exception("Phải chọn ít nhất 1 sách")
+
+            with transaction.atomic():
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT SINHVIENID FROM SINHVIEN WHERE MSSV = %s",
+                        [mssv]
+                    )
+                    row = cursor.fetchone()
+
+                    if not row:
+                        raise Exception("MSSV không tồn tại!")
+
+                    sinhvien_id = row[0]
+                    cursor.execute(
+                        "EXEC SP_MUONSACH %s, %s, %s",
+                        [sinhvien_id, nhanvien_id, ngaytra]
+                    )
+                    phieu_id = cursor.fetchone()[0]
+
+                    for sach_id, soluong in zip(sach_ids, soluongs):
+                        if not sach_id or not soluong:
+                            continue
+
+                        soluong = int(soluong)
+
+                        if soluong <= 0:
+                            raise Exception("Số lượng phải > 0")
+
+                        cursor.execute(
+                            "EXEC SP_THEM_SACH_VAO_PHIEU %s, %s, %s",
+                            [phieu_id, int(sach_id), soluong]
+                        )
+
+            messages.success(request, "Tạo phiếu mượn thành công!")
+
+        except Exception as e:
+            messages.error(request, f"Lỗi: {str(e)}")
+
+        return redirect('borrows')
+    
+
+
+@require_POST
+def book_return(request):
+    phieu_id = request.POST.get('phieu_id')  
+
+    if not phieu_id:
+        messages.error(request, "Thiếu mã phiếu mượn!")
+        return redirect('borrows')
+
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("EXEC SP_TRASACH %s", [phieu_id])
+
+        messages.success(request, "Đã trả sách thành công!")
+
+    except Exception as e:
+        messages.error(request, f"Lỗi: {str(e)}")
+
+    return redirect('borrows')
+
+def borrow_detail(request, phieu_id):
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT 
+                SV.MSSV,
+                SV.HOTEN,
+                S.TENSACH,
+                CT.SOLUONG
+            FROM PHIEUMUON PM
+            JOIN SINHVIEN SV ON PM.SINHVIENID = SV.SINHVIENID
+            JOIN CT_PHIEUMUON CT ON PM.PHIEUMUONID = CT.PHIEUMUONID
+            JOIN SACH S ON CT.SACHID = S.SACHID
+            WHERE PM.PHIEUMUONID = %s
+        """, [phieu_id])
+
+        data = [
+            {
+                "mssv": row[0],
+                "hoten": row[1],
+                "tensach": row[2],
+                "soluong": row[3],
+            }
+            for row in cursor.fetchall()
+        ]
+
+    return JsonResponse({"data": data})

@@ -37,7 +37,7 @@
                 {% endif %}
 
                 {% if 'borrows' in request.session.permissions %}
-                <a href="{% url 'borrow' %}" class="nav-item {% if request.resolver_match.url_name == 'borrow' %}active{% endif %}">Mượn sách</a>
+                <a href="{% url 'borrows' %}" class="nav-item {% if request.resolver_match.url_name == 'borrow' %}active{% endif %}">Mượn sách</a>
                 {% endif %}
 
                 {% if 'borrowers' in request.session.permissions %}
@@ -113,7 +113,7 @@
                             <a href="{% url 'book_list' %}" class="simple-btn primary">Vào sách</a>
                             {% endif %}
                             {% if 'borrows' in request.session.permissions %}
-                            <a href="{% url 'borrow' %}" class="simple-btn">Vào mượn sách</a>
+                            <a href="{% url 'borrows' %}" class="simple-btn">Vào mượn sách</a>
                             {% endif %}
                             {% if 'borrowers' in request.session.permissions %}
                             <a href="{% url 'borrower' %}" class="simple-btn">Vào người mượn</a>

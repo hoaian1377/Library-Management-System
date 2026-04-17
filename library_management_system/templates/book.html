@@ -166,9 +166,31 @@
                     </div>
                     <div class="action-row full">
                         <button type="submit" class="simple-btn primary">Thêm sách</button>
-                        <button type="button" class="simple-btn">Cập nhật sách</button>
-                        <button type="button" class="simple-btn danger-outline">Xoá sách</button>
                     </div>
+                </form>
+                <form id="update-form" method="post" action="{% url 'book_update' %}">
+                    {% csrf_token %}
+                    
+                    <input type="hidden" name="sachid" id="update-book-id">
+
+                    <input type="hidden" name="tensach" id="update-tensach">
+                    <input type="hidden" name="tentacgia" id="update-tentacgia">
+                    <input type="hidden" name="tentheloai" id="update-tentheloai">
+                    <input type="hidden" name="namxuatban" id="update-namxuatban">
+                    <input type="hidden" name="soluong" id="update-soluong">
+                    <input type="hidden" name="nhaxuatban" id="update-nhaxuatban">
+
+                    <button type="submit" class="simple-btn">
+                        Cập nhật
+                    </button>
+                </form>
+                <form method="post" action="{% url 'book_delete' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="sachid" id="delete-book-id">
+
+                            <button type="submit" class="simple-btn danger-outline">
+                                Xoá sách
+                            </button>
                 </form>
             </article>
             {% else %}
@@ -238,7 +260,7 @@
             fields.year.value = dataset.bookYear || '';
             fields.quantity.value = dataset.bookQuantity || '';
             fields.note.value = dataset.bookNote || '';
-
+            document.getElementById('delete-book-id').value = dataset.bookId || '';
             if (modeBanner) {
                 modeBanner.innerHTML = `Đang chọn sách <strong>#${dataset.bookId}</strong> để cập nhật hoặc xoá.`;
             }
@@ -286,7 +308,27 @@
                 document.getElementById('book-code')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
             });
         }
+        const updateForm = document.getElementById('update-form');
+
+        updateForm.addEventListener('submit', function(e) {
+            const id = document.getElementById('selected-book-id').value;
+
+            if (!id) {
+                alert("Chưa chọn sách!");
+                e.preventDefault();
+                return;
+            }
+
+            document.getElementById('update-book-id').value = id;
+            document.getElementById('update-tensach').value = fields.title.value;
+            document.getElementById('update-tentacgia').value = fields.author.value;
+            document.getElementById('update-tentheloai').value = fields.category.value;
+            document.getElementById('update-namxuatban').value = fields.year.value;
+            document.getElementById('update-soluong').value = fields.quantity.value;
+            document.getElementById('update-nhaxuatban').value = document.querySelector('[name="nhaxuatban"]').value;
+        });
     })();
+
 </script>
 {% endif %}
 {% endblock %}
