@@ -1,4 +1,18 @@
 {% extends 'base.html' %}
+{% block extra_head %}
+<style>
+.table-scroll {
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.form-grid {
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 10px; 
+}
+</style>
+{% endblock %}
 {% block content %}
 <section class="page-grid">
     <article class="page-card">
@@ -23,6 +37,8 @@
             {% endif %}
         </div>
     </article>
+    
+    
 
     <div class="two-column">
         <div class="stack-grid">
@@ -33,13 +49,33 @@
                         <p class="section-subtitle">Ô tìm kiếm này đã hoạt động với dữ liệu thật.</p>
                     </div>
                 </div>
-
                 <form method="GET" class="search-form">
                     <input class="control" type="text" name="q" placeholder="Nhập tên sách..." value="{{ keyword }}">
-                    <button type="submit" class="simple-btn primary">Tìm kiếm</button>
-                    {% if keyword %}
-                    <a href="{% url 'book_list' %}" class="simple-btn gray">Xoá bộ lọc</a>
-                    {% endif %}
+
+                    <select name="category" class="control surface-input" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+                        <option value="">-- Tất cả thể loại --</option>
+                        {% for cat in categories %}
+                            <option value="{{ cat.theloaiid }}" {% if cat.theloaiid|stringformat:"s" == selected_category %}selected{% endif %}>
+                                {{ cat.tentheloai }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <select name="author" class="control surface-input" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+                        <option value="">-- Tất cả tác giả --</option>
+                        {% for auth in authors %}
+                            <option value="{{ auth.tacgiaid }}" {% if auth.tacgiaid|stringformat:"s" == selected_author %}selected{% endif %}>
+                                {{ auth.tentacgia }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <div class="action-row">
+                        <button type="submit" class="simple-btn primary">Tìm &amp; Lọc</button>
+                        {% if keyword or selected_category or selected_author %}
+                        <a href="{% url 'book_list' %}" class="simple-btn gray">Xoá bộ lọc</a>
+                        {% endif %}
+                    </div>
                 </form>
             </article>
 

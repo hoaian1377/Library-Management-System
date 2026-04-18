@@ -11,6 +11,7 @@ from django.urls import reverse
 from django.views.decorators.http import require_POST
 from .models import Nhanvien, Sach, Taikhoan, Tacgia, Theloai, Sinhvien
 
+
 ROLE_LABELS = {
     'admin': 'Quản trị viên',
     'user': 'Sinh viên',
@@ -377,11 +378,23 @@ def book_list(request):
     if keyword:
         books = books.filter(tensach__icontains=keyword)
 
-    tacgia=Tacgia.objects.all() 
-    theloai=Theloai.objects.all()
+    selected_category = request.GET.get('category', '').strip()
+    if selected_category:
+        books = books.filter(theloaiid__theloaiid=selected_category)
+
+    selected_author = request.GET.get('author', '').strip()
+    if selected_author:
+        books = books.filter(tacgiaid__tacgiaid=selected_author)
+
+    authors = Tacgia.objects.all().order_by('tentacgia')
+    categories = Theloai.objects.all().order_by('tentheloai')
     return render(request, 'book.html', {
         'books': books,
         'keyword': keyword,
+        'selected_category': selected_category,
+        'selected_author': selected_author,
+        'authors': authors,
+        'categories': categories,
     })
 
 def book_add(request):
