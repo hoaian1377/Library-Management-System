@@ -1,27 +1,85 @@
 {% extends 'base.html' %}
 {% block content %}
+<style>
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    .stat-card {
+        background: var(--surface-default);
+        border: 1px solid var(--border-default);
+        border-radius: var(--radius-lg);
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        box-shadow: var(--shadow-sm);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-md);
+    }
+    .stat-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: var(--primary-main);
+    }
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+    .stat-label {
+        font-size: 1rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+</style>
+
 <section class="page-grid">
     <article class="page-card">
         <div class="page-header">
             <div>
                 <h2 class="page-title">Thống kê báo cáo</h2>
                 <p class="page-text">
-                    FE báo cáo hiện chỉ giữ lại bộ lọc và bảng chi tiết báo cáo theo đúng nhu cầu của đề bài.
-                    Phần dữ liệu sẽ được nối từ backend sau.
+                    Xem tổng quan các số liệu của thư viện và xuất báo cáo.
                 </p>
             </div>
         </div>
     </article>
 
+    <div class="dashboard-grid">
+        <div class="stat-card">
+            <div class="stat-icon">📚</div>
+            <div class="stat-value">{{ total_books|default:"0" }}</div>
+            <div class="stat-label">Tổng Số Sách</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🧑‍🎓</div>
+            <div class="stat-value">{{ total_borrowers|default:"0" }}</div>
+            <div class="stat-label">Tổng Người Mượn</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🔖</div>
+            <div class="stat-value">{{ total_borrows|default:"0" }}</div>
+            <div class="stat-label">Lượt Mượn Sách</div>
+        </div>
+    </div>
+
     <article class="page-card">
         <div class="section-title-row">
             <div>
                 <h3 class="section-title">Bộ lọc báo cáo</h3>
-                <p class="section-subtitle">Khung FE để quản lý thư viện chọn kỳ thống kê.</p>
+                <p class="section-subtitle">Tùy chỉnh tiêu chí để tạo báo cáo chi tiết.</p>
             </div>
         </div>
 
-        <form class="form-grid" action="#" method="get" onsubmit="return false;">
+        <form class="form-grid" action="#" method="get" onsubmit="alert('Tính năng xuất báo cáo đang được cập nhật!'); return false;">
             <div class="field-block">
                 <label for="report-type">Loại báo cáo</label>
                 <select class="surface-select" id="report-type">
@@ -47,39 +105,11 @@
                 <input class="surface-input" id="report-end" type="date">
             </div>
             <div class="action-row full">
-                <button type="button" class="simple-btn primary">Tạo báo cáo</button>
-                <button type="button" class="simple-btn">Xuất Excel</button>
-                <button type="button" class="simple-btn">Xuất PDF</button>
+                <button type="submit" class="simple-btn primary">Tạo báo cáo</button>
+                <button type="button" class="simple-btn" onclick="alert('Tính năng tải Excel đang được cập nhật!');">Xuất Excel</button>
+                <button type="button" class="simple-btn" onclick="alert('Tính năng tải PDF đang được cập nhật!');">Xuất PDF</button>
             </div>
         </form>
-    </article>
-
-    <article class="page-card">
-        <div class="section-title-row">
-            <div>
-                <h3 class="section-title">Bảng chi tiết báo cáo</h3>
-                <p class="section-subtitle">Khu vực hiển thị dữ liệu thống kê khi backend sẵn sàng.</p>
-            </div>
-        </div>
-
-        <div class="table-card">
-            <div class="table-scroll">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Hạng mục</th>
-                            <th>Giá trị</th>
-                            <th>Diễn giải</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colspan="3">Chưa có dữ liệu báo cáo từ backend.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
     </article>
 </section>
 {% endblock %}

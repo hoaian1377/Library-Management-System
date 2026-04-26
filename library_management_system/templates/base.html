@@ -45,9 +45,7 @@
                 <a href="{% url 'borrower' %}" class="nav-item {% if request.resolver_match.url_name == 'borrower' %}active{% endif %}">Người mượn</a>
                 {% endif %}
 
-                {% if 'reports' in request.session.permissions %}
-                <a href="{% url 'report' %}" class="nav-item {% if request.resolver_match.url_name == 'report' %}active{% endif %}">Thống kê báo cáo</a>
-                {% endif %}
+
                 {% endif %}
             </nav>
         </aside>
@@ -74,10 +72,12 @@
                         <strong>{{ request.session.display_name|default:request.session.user }}</strong>
                         <span>{{ request.session.role_label|default:request.session.role|default:"Người dùng" }}</span>
                     </div>
+                    {% if request.session.role == 'admin' or request.session.role == 'manager' %}
+                    <a href="#" class="topbar-btn" data-open-register="true">Tạo TK Nhân Viên</a>
+                    {% endif %}
                     <a href="{% url 'logout' %}" class="topbar-btn danger">Đăng xuất</a>
                     {% else %}
                     <a href="#" class="topbar-btn primary" data-open-login="true">Đăng nhập</a>
-                    <a href="#" class="topbar-btn" data-open-register="true">Đăng ký</a>
                     {% endif %}
                 </div>
             </header>
@@ -122,6 +122,9 @@
                             {% if 'reports' in request.session.permissions %}
                             <a href="{% url 'report' %}" class="simple-btn">Vào báo cáo</a>
                             {% endif %}
+                            {% if request.session.role == 'admin' or request.session.role == 'manager' %}
+                            <a href="#" class="simple-btn" data-open-register="true">Cấp tài khoản nhân viên</a>
+                            {% endif %}
                         </div>
                         {% else %}
                         <div class="status-banner">
@@ -130,7 +133,6 @@
 
                         <div class="quick-actions">
                             <a href="#" class="simple-btn primary" data-open-login="true">Đăng nhập hệ thống</a>
-                            <a href="#" class="simple-btn" data-open-register="true">Đăng ký tài khoản</a>
                         </div>
                         {% endif %}
                     </article>

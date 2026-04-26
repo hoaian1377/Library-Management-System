@@ -4,7 +4,7 @@ from urllib.parse import urlencode
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password, make_password
 from django.db import transaction, connection
-from django.db.models import Max, Q
+from django.db.models import Max, Q, Sum
 from django.http import JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
@@ -14,14 +14,12 @@ from .models import Nhanvien, Sach, Taikhoan, Tacgia, Theloai, Sinhvien
 
 ROLE_LABELS = {
     'admin': 'Quản trị viên',
-    'user': 'Sinh viên',
     'staff': 'Nhân viên thư viện',
     'manager': 'Quản lý thư viện',
 }
 
 ROLE_PERMISSIONS = {
     'admin': {'books', 'borrows', 'borrowers', 'reports'},
-    'user': {'books', 'borrows'},
     'staff': {'books', 'borrows', 'borrowers'},
     'manager': {'books', 'borrows', 'borrowers', 'reports'},
 }
@@ -40,8 +38,8 @@ def _is_ajax(request):
 
 
 def _normalize_role(role):
-    normalized = (role or 'user').strip().lower()
-    return normalized if normalized in ROLE_PERMISSIONS else 'user'
+    normalized = (role or 'staff').strip().lower()
+    return normalized if normalized in ROLE_PERMISSIONS else 'staff'
 
 
 def _get_role_label(role):
@@ -49,7 +47,7 @@ def _get_role_label(role):
 
 
 def _get_permissions(role):
-    return ROLE_PERMISSIONS.get(_normalize_role(role), ROLE_PERMISSIONS['user'])
+    return ROLE_PERMISSIONS.get(_normalize_role(role), ROLE_PERMISSIONS['staff'])
 
 
 def _hydrate_session_permissions(request):
@@ -180,7 +178,26 @@ def borrower(request):
 
 @_require_permission('reports')
 def report(request):
-    return render(request, 'report.html')
+    total_books = Sach.objects.aggregate(total=Sum('soluong'))['total'] or 0
+    total_borrowers = Sinhvien.objects.count()
+    
+    # We can fetch some dummy or real aggregations. 
+    # Since MUONSACH is used in DB:
+    total_borrows = 0
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT COUNT(*) FROM PHIEUMUON")
+            row = cursor.fetchone()
+            total_borrows = row[0] if row else 0
+    except Exception:
+        pass
+
+    context = {
+        'total_books': total_books,
+        'total_borrowers': total_borrowers,
+        'total_borrows': total_borrows,
+    }
+    return render(request, 'report.html', context)
 
 
 def login_view(request):
@@ -204,6 +221,16 @@ def login_view(request):
 def register_view(request):
     if request.method != "POST":
         return redirect(_build_url('base', auth='register'))
+
+    role = request.session.get('role')
+    if role not in ['admin', 'manager']:
+        return _json_or_redirect(
+            request,
+            False,
+            "Chỉ Quản lý hoặc Admin mới được phép cấp tài khoản.",
+            modal='register',
+            status=403,
+        )
 
     full_name = request.POST.get("full_name", "").strip()
     username = request.POST.get("username", "").strip()
@@ -269,7 +296,7 @@ def register_view(request):
         Taikhoan.objects.create(
             username=username,
             matkhau=make_password(password),
-            vaitro="user",
+            vaitro="staff",
             nhanvienid=nhanvien,
         )
 
@@ -662,28 +689,38 @@ def borrower(request):
         sdt = request.POST.get('sdt')
         lophoc = request.POST.get('lophoc')
 
-        if action == 'add':
-            Sinhvien.objects.create(
-                mssv=mssv,
-                hoten=hoten,
-                email=email,
-                sdt=sdt,
-                lophoc=lophoc
-            )
+        try:
+            if action == 'add':
+                Sinhvien.objects.create(
+                    mssv=mssv,
+                    hoten=hoten,
+                    email=email,
+                    sdt=sdt,
+                    lophoc=lophoc
+                )
+                messages.success(request, "Thêm người mượn thành công!")
+            elif action == 'update':
+                sv = get_object_or_404(Sinhvien, mssv=mssv)
+                sv.hoten = hoten
+                sv.email = email
+                sv.sdt = sdt
+                sv.lophoc = lophoc
+                sv.save()
+                messages.success(request, "Cập nhật người mượn thành công!")
+            elif action == 'delete':
+                sv = get_object_or_404(Sinhvien, mssv=mssv)
+                sv.delete()
+                messages.success(request, "Xóa người mượn thành công!")
+        except Exception as e:
+            error_msg = str(e)
+            if 'UNIQUE KEY constraint' in error_msg:
+                messages.error(request, f"Lỗi: Mã số '{mssv}' đã tồn tại trong hệ thống!")
+            elif 'REFERENCE constraint' in error_msg:
+                messages.error(request, "Lỗi: Không thể xóa người mượn này vì đang có phiếu mượn sách!")
+            else:
+                messages.error(request, f"Lỗi: {error_msg}")
 
-        elif action == 'update':
-            sv = get_object_or_404(Sinhvien, mssv=mssv)
-            sv.hoten = hoten
-            sv.email = email
-            sv.sdt = sdt
-            sv.lophoc = lophoc
-            sv.save()
-
-        elif action == 'delete':
-            sv = get_object_or_404(Sinhvien, mssv=mssv)
-            sv.delete()
-
-        return redirect('borrower')  # tên url
+        return redirect('borrower')
 
     context = {
         'sinhviens': sinhviens,
