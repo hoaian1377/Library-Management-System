@@ -176,28 +176,7 @@ def borrower(request):
     return render(request, 'borrower.html')
 
 
-@_require_permission('reports')
-def report(request):
-    total_books = Sach.objects.aggregate(total=Sum('soluong'))['total'] or 0
-    total_borrowers = Sinhvien.objects.count()
-    
-    # We can fetch some dummy or real aggregations. 
-    # Since MUONSACH is used in DB:
-    total_borrows = 0
-    try:
-        with connection.cursor() as cursor:
-            cursor.execute("SELECT COUNT(*) FROM PHIEUMUON")
-            row = cursor.fetchone()
-            total_borrows = row[0] if row else 0
-    except Exception:
-        pass
 
-    context = {
-        'total_books': total_books,
-        'total_borrowers': total_borrowers,
-        'total_borrows': total_borrows,
-    }
-    return render(request, 'report.html', context)
 
 
 def login_view(request):

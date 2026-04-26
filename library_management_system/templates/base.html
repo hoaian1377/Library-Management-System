@@ -99,7 +99,7 @@
                                 <h2 class="page-title">Quản lý thư viện</h2>
                                 <p class="page-text">
                                     Giao diện hiện tập trung đúng vào quản lý sách, mượn sách, người mượn,
-                                    đăng nhập - đăng ký và thống kê báo cáo.
+                                    đăng nhập - đăng ký.
                                 </p>
                             </div>
                         </div>
@@ -119,9 +119,7 @@
                             {% if 'borrowers' in request.session.permissions %}
                             <a href="{% url 'borrower' %}" class="simple-btn">Vào người mượn</a>
                             {% endif %}
-                            {% if 'reports' in request.session.permissions %}
-                            <a href="{% url 'report' %}" class="simple-btn">Vào báo cáo</a>
-                            {% endif %}
+
                             {% if request.session.role == 'admin' or request.session.role == 'manager' %}
                             <a href="#" class="simple-btn" data-open-register="true">Cấp tài khoản nhân viên</a>
                             {% endif %}

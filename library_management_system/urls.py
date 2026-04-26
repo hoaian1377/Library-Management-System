@@ -12,7 +12,6 @@ urlpatterns = [
     path('borrow/reutrn/', views.book_return, name='book_return'),
     path('borrow/detail/<int:phieu_id>/', views.borrow_detail, name='borrow_detail'),
     path('borrowers/', views.borrower, name='borrower'),
-    path('reports/', views.report, name='report'),
     path('login/', views.login_view, name='login_modal'),
     path('register/', views.register_view, name='register'),
     path('forgot-password/verify/', views.forgot_password_verify_view, name='forgot_password_verify'),
