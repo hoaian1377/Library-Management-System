@@ -416,7 +416,6 @@ def book_add(request):
             if not tacgia:
                 tacgia = Tacgia.objects.create(tentacgia=tentacgia)
 
-            # 🔥 tìm hoặc tạo thể loại
             theloai = Theloai.objects.filter(tentheloai=tentheloai).first()
             if not theloai:
                 theloai = Theloai.objects.create(tentheloai=tentheloai)
@@ -426,7 +425,7 @@ def book_add(request):
                             """,[tensach, namxuatban, nhaxuatban, soluong, theloai.theloaiid, tacgia.tacgiaid,])
                 row = cursor.fetchone()
                 sach_id=row[0] if row else None
-            messages.success(request, f"Thêm sách thành công! ID = {sach_id}")
+            messages.success(request, f"Thêm sách thành công")
             return redirect('book_list')
 
         except Exception as e:
@@ -485,12 +484,11 @@ def borrows(request):
                 "ngaymuon": row[2],
                 "ngaytra": row[3],
                 "trangthai": row[4],
-                "tensach": "Nhiều sách"   # 👈 fix luôn chỗ này
+                "tensach": "Nhiều sách"  
             }
             for row in cursor.fetchall()
         ]
 
-    # load books cho form (giữ nguyên)
     with connection.cursor() as cursor:
         cursor.execute("SELECT SACHID, TENSACH FROM SACH")
         books = [{"sachid": r[0], "tensach": r[1]} for r in cursor.fetchall()]
@@ -620,10 +618,6 @@ def borrow_detail(request, phieu_id):
 
     return JsonResponse({"data": data})
 
-
-
-
-
 def borrower_add(request):
     if request.method == "POST":
         try:
@@ -649,7 +643,6 @@ def borrower_add(request):
 def borrower(request):
     keyword = request.GET.get('keyword', '')
 
-    # 🔍 Tìm kiếm
     sinhviens = Sinhvien.objects.all()
     if keyword:
         sinhviens = sinhviens.filter(
